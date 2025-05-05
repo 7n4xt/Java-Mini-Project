@@ -1,8 +1,8 @@
-package fr.samourai.adventure.view;
+package src.view;
 
-import fr.samourai.adventure.controller.GameController;
-import fr.samourai.adventure.model.Chapitre;
-import fr.samourai.adventure.model.Choix;
+import src.controller.GameController;
+import src.model.Chapitre;
+import src.model.Choix;
 
 import java.util.List;
 import java.util.Map;

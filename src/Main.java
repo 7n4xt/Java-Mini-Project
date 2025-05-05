@@ -1,10 +1,10 @@
-package fr.samourai.adventure;
+// Removed package declaration to match the default package
 
-import fr.samourai.adventure.controller.GameController;
-import fr.samourai.adventure.controller.ScenarioLoader;
-import fr.samourai.adventure.model.Scenario;
-import fr.samourai.adventure.view.SwingUI;
-import fr.samourai.adventure.view.TextUI;
+import src.controller.GameController;
+import src.controller.ScenarioLoader;
+import src.model.Scenario;
+import src.view.SwingUI;
+import src.view.TextUI;
 
 import javax.swing.*;
 import java.util.Scanner;

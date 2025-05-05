@@ -1,4 +1,4 @@
-package fr.samourai.adventure.model;
+package src.model;
 
 /**
  * Représente un choix possible dans un chapitre, avec le texte du choix

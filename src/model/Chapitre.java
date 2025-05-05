@@ -1,4 +1,4 @@
-package fr.samourai.adventure.model;
+package src.model;
 
 import java.util.ArrayList;
 import java.util.List;

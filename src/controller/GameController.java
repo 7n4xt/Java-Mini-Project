@@ -1,9 +1,9 @@
-package fr.samourai.adventure.controller;
+package src.controller;
 
-import fr.samourai.adventure.model.Chapitre;
-import fr.samourai.adventure.model.Choix;
-import fr.samourai.adventure.model.Personnage;
-import fr.samourai.adventure.model.Scenario;
+import src.model.Chapitre;
+import src.model.Choix;
+import src.model.Personnage;
+import src.model.Scenario;
 
 import java.io.FileWriter;
 import java.io.IOException;

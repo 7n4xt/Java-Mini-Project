@@ -1,4 +1,4 @@
-package fr.samourai.adventure.model;
+package src.model;
 
 import java.util.HashMap;
 import java.util.Map;
