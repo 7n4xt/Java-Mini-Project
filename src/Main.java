@@ -3,8 +3,11 @@
 import controller.GameController;
 import controller.ScenarioLoader;
 import model.Scenario;
+import view.MenuUI;
+import view.SamuraiSwingUI;
 import view.SwingUI;
 import view.TextUI;
+
 import javax.swing.*;
 import java.util.Scanner;
 
@@ -17,28 +20,22 @@ public class Main {
      * Point d'entrée de l'application
      */
     public static void main(String[] args) {
-        System.out.println("Chargement du scénario...");
+        System.out.println("Lancement de L'Épée du Samouraï...");
 
-        // Création d'un scénario de démonstration
-        Scenario scenario = ScenarioLoader.creerScenarioDemonstration();
-
-        // Demander le nom du joueur
-        String nomJoueur = demanderNomJoueur();
-
-        // Initialisation du contrôleur de jeu
-        GameController gameController = new GameController(scenario, nomJoueur);
-
-        // Choix de l'interface (graphique ou texte)
+        // Demander le type d'interface (toujours demandé en console)
         boolean useGraphicalUI = demanderInterfaceGraphique();
 
         if (useGraphicalUI) {
-            // Interface graphique avec Swing
-            SwingUI swingUI = new SwingUI(gameController);
+            // Lancer l'interface graphique avec le nouveau menu
             SwingUtilities.invokeLater(() -> {
-                swingUI.setVisible(true);
+                MenuUI menuUI = new MenuUI();
+                menuUI.setVisible(true);
             });
         } else {
-            // Interface texte en ligne de commande
+            // Interface texte en ligne de commande (inchangée)
+            String nomJoueur = demanderNomJoueur();
+            Scenario scenario = ScenarioLoader.creerScenarioDemonstration();
+            GameController gameController = new GameController(scenario, nomJoueur);
             TextUI textUI = new TextUI(gameController);
             textUI.demarrer();
         }
@@ -69,7 +66,7 @@ public class Main {
     private static boolean demanderInterfaceGraphique() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Quelle interface souhaitez-vous utiliser?");
-        System.out.println("1) Interface graphique (recommandée)");
+        System.out.println("1) Interface graphique (style Samouraï, recommandée)");
         System.out.println("2) Interface texte (ligne de commande)");
 
         while (true) {
