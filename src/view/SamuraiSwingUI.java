@@ -193,10 +193,17 @@ public class SamuraiSwingUI extends JFrame {
         menuPanel.setOpaque(false);
         menuPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
 
+        JButton inventaireButton = createStyledButton("🎒 Inventaire");
         JButton sauvegarderButton = createStyledButton("Sauvegarder");
         JButton chargerButton = createStyledButton("Charger");
         JButton menuButton = createStyledButton("Menu");
         JButton quitterButton = createStyledButton("Quitter");
+
+        inventaireButton.addActionListener(e -> {
+            InventoryWindow inventoryWindow = new InventoryWindow(this, gameController.getPersonnage());
+            inventoryWindow.setVisible(true);
+            updateStatsPanel(); // Mettre à jour l'affichage après modification de l'inventaire
+        });
 
         sauvegarderButton.addActionListener(e -> sauvegarderPartie());
         chargerButton.addActionListener(e -> chargerPartie());
@@ -211,6 +218,8 @@ public class SamuraiSwingUI extends JFrame {
             }
         });
 
+        menuPanel.add(inventaireButton);
+        menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         menuPanel.add(sauvegarderButton);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         menuPanel.add(chargerButton);
@@ -295,7 +304,8 @@ public class SamuraiSwingUI extends JFrame {
             statsPanel.add(vide);
         } else {
             for (String item : inventaire) {
-                JLabel itemLabel = new JLabel("- " + item);
+                String icon = Personnage.getItemIcon(item);
+                JLabel itemLabel = new JLabel(icon + " " + item);
                 itemLabel.setForeground(TEXT_COLOR);
                 itemLabel.setFont(new Font("Yu Mincho", Font.PLAIN, 14));
                 statsPanel.add(itemLabel);

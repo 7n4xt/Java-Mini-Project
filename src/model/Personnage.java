@@ -12,6 +12,20 @@ public class Personnage {
     private String nom;
     private Map<String, Integer> statistiques;
     private List<String> inventaire;
+    private static final Map<String, String> ITEM_ICONS = new HashMap<>();
+
+    static {
+        ITEM_ICONS.put("Katana de famille", "⚔️");
+        ITEM_ICONS.put("Armure légère", "🛡️");
+        ITEM_ICONS.put("Nécessaire de méditation", "🎐");
+        ITEM_ICONS.put("Rations de voyage", "🍙");
+        ITEM_ICONS.put("Gourde d'eau", "🏺");
+        ITEM_ICONS.put("Shuriken", "✴️");
+        ITEM_ICONS.put("Parchemin magique", "📜");
+        ITEM_ICONS.put("Potion de soin", "🧪");
+        ITEM_ICONS.put("Amulette sacrée", "🔮");
+        ITEM_ICONS.put("Kunai", "🗡️");
+    }
 
     /**
      * Constructeur de Personnage
@@ -67,6 +81,13 @@ public class Personnage {
      */
     public int getStatistique(String nom) {
         return statistiques.getOrDefault(nom, 0);
+    }
+
+    /**
+     * Récupère l'icône associée à un objet
+     */
+    public static String getItemIcon(String item) {
+        return ITEM_ICONS.getOrDefault(item, "📦");
     }
 
     // Getters et setters
