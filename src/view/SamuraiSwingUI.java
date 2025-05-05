@@ -198,6 +198,7 @@ public class SamuraiSwingUI extends JFrame {
         JButton chargerButton = createStyledButton("Charger");
         JButton menuButton = createStyledButton("Menu");
         JButton quitterButton = createStyledButton("Quitter");
+        JButton helpButton = createStyledButton("❔ Aide");
 
         inventaireButton.addActionListener(e -> {
             InventoryWindow inventoryWindow = new InventoryWindow(this, gameController.getPersonnage());
@@ -218,6 +219,11 @@ public class SamuraiSwingUI extends JFrame {
             }
         });
 
+        helpButton.addActionListener(e -> {
+            HelpWindow helpWindow = new HelpWindow(this);
+            helpWindow.setVisible(true);
+        });
+
         menuPanel.add(inventaireButton);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         menuPanel.add(sauvegarderButton);
@@ -227,6 +233,9 @@ public class SamuraiSwingUI extends JFrame {
         menuPanel.add(menuButton);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         menuPanel.add(quitterButton);
+        menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        menuPanel.add(helpButton);
+        menuPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         return menuPanel;
     }
