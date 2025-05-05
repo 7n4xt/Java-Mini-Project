@@ -1,11 +1,10 @@
 // Removed package declaration to match the default package
 
-import src.controller.GameController;
-import src.controller.ScenarioLoader;
-import src.model.Scenario;
-import src.view.SwingUI;
-import src.view.TextUI;
-
+import controller.GameController;
+import controller.ScenarioLoader;
+import model.Scenario;
+import view.SwingUI;
+import view.TextUI;
 import javax.swing.*;
 import java.util.Scanner;
 

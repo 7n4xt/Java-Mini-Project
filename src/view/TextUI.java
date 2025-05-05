@@ -1,8 +1,8 @@
-package src.view;
+package view;
 
-import src.controller.GameController;
-import src.model.Chapitre;
-import src.model.Choix;
+import controller.GameController;
+import model.Chapitre;
+import model.Choix;
 
 import java.util.List;
 import java.util.Map;

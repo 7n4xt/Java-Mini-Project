@@ -1,9 +1,9 @@
-package src.view;
+package view;
 
-import src.controller.GameController;
-import src.model.Chapitre;
-import src.model.Choix;
-import src.model.Personnage;
+import controller.GameController;
+import model.Chapitre;
+import model.Choix;
+import model.Personnage;
 
 import javax.swing.*;
 import java.awt.*;

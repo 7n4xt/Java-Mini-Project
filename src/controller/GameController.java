@@ -1,9 +1,9 @@
-package src.controller;
+package controller;
 
-import src.model.Chapitre;
-import src.model.Choix;
-import src.model.Personnage;
-import src.model.Scenario;
+import model.Chapitre;
+import model.Choix;
+import model.Personnage;
+import model.Scenario;
 
 import java.io.FileWriter;
 import java.io.IOException;

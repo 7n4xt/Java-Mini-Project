@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 /**
  * Représente un choix possible dans un chapitre, avec le texte du choix

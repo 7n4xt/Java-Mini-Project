@@ -1,8 +1,8 @@
-package src.controller;
+package controller;
 
-import src.model.Chapitre;
-import src.model.Choix;
-import src.model.Scenario;
+import model.Chapitre;
+import model.Choix;
+import model.Scenario;
 
 import java.io.IOException;
 import java.nio.file.Files;
