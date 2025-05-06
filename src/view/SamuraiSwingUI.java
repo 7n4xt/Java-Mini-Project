@@ -333,9 +333,8 @@ public class SamuraiSwingUI extends JFrame {
      * @param chapitre Le chapitre à afficher
      */
     public void afficherChapitre(Chapitre chapitre) {
-        // Mise à jour du texte du chapitre
-        texteChapitreArea.setText(chapitre.getTitre() + "\n\n" + chapitre.getTexte());
-        texteChapitreArea.setCaretPosition(0);
+        // Affichage progressif du texte du chapitre
+        afficherTexteProgressif(chapitre.getTitre() + "\n\n" + chapitre.getTexte());
 
         // Mise à jour des choix
         choixPanel.removeAll();
@@ -433,6 +432,38 @@ public class SamuraiSwingUI extends JFrame {
 
         choixPanel.revalidate();
         choixPanel.repaint();
+    }
+
+    /**
+     * Affiche le texte progressivement dans la zone de texte
+     */
+    private void afficherTexteProgressif(String texte) {
+        texteChapitreArea.setText("");
+        Timer timer = new Timer(30, null); // 30ms au lieu de 50ms
+        final int[] index = {0};
+
+        timer.addActionListener(e -> {
+            if (index[0] < texte.length()) {
+                char currentChar = texte.charAt(index[0]);
+                texteChapitreArea.append(String.valueOf(currentChar));
+                texteChapitreArea.setCaretPosition(texteChapitreArea.getText().length());
+                
+                // Accélérer l'affichage pour les espaces et la ponctuation
+                if (currentChar == ' ' || currentChar == '.' || currentChar == ',' || 
+                    currentChar == '!' || currentChar == '?' || currentChar == '\n') {
+                    // Avancer plus rapidement pour ces caractères
+                    index[0]++;
+                    if (index[0] < texte.length()) {
+                        texteChapitreArea.append(String.valueOf(texte.charAt(index[0])));
+                    }
+                }
+                index[0]++;
+            } else {
+                timer.stop();
+            }
+        });
+
+        timer.start();
     }
 
     /**
