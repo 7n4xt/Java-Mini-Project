@@ -3,6 +3,7 @@ package view;
 import controller.GameController;
 import model.Chapitre;
 import model.Choix;
+import model.Enemy;
 import model.Personnage;
 
 import javax.swing.*;
@@ -344,6 +345,7 @@ public class SamuraiSwingUI extends JFrame {
             // défaite
             boolean isVictory = !chapitre.getTitre().contains("Perdu") &&
                     !chapitre.getTexte().contains("perdu") &&
+                    !chapitre.getTitre().toLowerCase().contains("défaite") &&
                     !chapitre.getTitre().toLowerCase().contains("mort") &&
                     !chapitre.getTexte().toLowerCase().contains("mort");
 
@@ -356,7 +358,7 @@ public class SamuraiSwingUI extends JFrame {
                         "Voulez-vous recommencer pour explorer d'autres chemins, ou retourner au menu principal ?";
 
                 // Afficher le dialogue de fin et attendre la réponse
-                LoseChapterDialog endDialog = new LoseChapterDialog(this, title, message, isVictory);
+                EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory);
                 boolean replay = endDialog.showDialogAndWaitForChoice();
 
                 if (replay) {
@@ -389,13 +391,38 @@ public class SamuraiSwingUI extends JFrame {
 
             for (int i = 0; i < choixPossibles.size(); i++) {
                 final int choixIndex = i;
-                JButton choixButton = createChoiceButton(choixPossibles.get(i).getTexte());
+                Choix choix = choixPossibles.get(i);
+                JButton choixButton = createChoiceButton(choix.getTexte());
+
                 choixButton.addActionListener(e -> {
-                    Chapitre chapitreChoisi = gameController.faireChoix(choixIndex);
-                    if (chapitreChoisi != null) {
-                        afficherChapitre(chapitreChoisi);
+                    // Vérifier si ce choix déclenche un combat
+                    if (chapitre.hasEnemy() && choix.declencheCombat()) {
+                        // Lancer le combat
+                        CombatUI combatUI = new CombatUI(this, gameController.getPersonnage(), chapitre.getEnemy());
+                        boolean victoire = combatUI.commencerCombat();
+
+                        if (victoire) {
+                            // Si le joueur gagne, on continue au chapitre suivant normal
+                            Chapitre chapitreChoisi = gameController.faireChoix(choixIndex);
+                            if (chapitreChoisi != null) {
+                                afficherChapitre(chapitreChoisi);
+                            }
+                        } else {
+                            // Si le joueur perd, on va au chapitre de défaite
+                            Chapitre chapitreDefaite = gameController.getChapitreDefaite(chapitre.getId());
+                            if (chapitreDefaite != null) {
+                                afficherChapitre(chapitreDefaite);
+                            }
+                        }
+                    } else {
+                        // Choix normal sans combat
+                        Chapitre chapitreChoisi = gameController.faireChoix(choixIndex);
+                        if (chapitreChoisi != null) {
+                            afficherChapitre(chapitreChoisi);
+                        }
                     }
                 });
+
                 choixPanel.add(choixButton);
                 choixPanel.add(Box.createRigidArea(new Dimension(0, 10)));
             }
