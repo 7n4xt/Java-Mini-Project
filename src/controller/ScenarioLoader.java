@@ -122,7 +122,7 @@ public class ScenarioLoader {
                 scenario.ajouterChapitre(chapitre8);
 
                 // Créer les ennemis
-                Enemy ninjaGardien = new Enemy("Ninja Gardien", 8, 10,
+                Enemy ninjaGardien = new Enemy("Ninja Gardien", 7, 8,
                                 "Un ninja agile et rapide qui garde le chemin menant aux montagnes. Il porte une armure légère et est armé d'une lame acérée.");
 
                 // Ajouter l'ennemi au premier chapitre

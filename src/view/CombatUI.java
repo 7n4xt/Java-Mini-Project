@@ -228,8 +228,20 @@ public class CombatUI extends JDialog implements ActionListener {
             appendToCombatLog(ennemi.getNom() + " vous a touché et vous a infligé " + dégâts + " points de dégâts !");
             vieJoueur.setValue(joueur.getStatistique("vie"));
         } else {
-            // Égalité, les deux esquivent
-            appendToCombatLog("Vous avez tous les deux esquivé les attaques !");
+            // Égalité, les deux esquivent mais il y a une chance que le joueur prenne quand
+            // même des dégâts
+            int chanceDegatAleatoire = (int) (Math.random() * 100); // 0-99
+
+            if (chanceDegatAleatoire < 30) { // 30% de chance de prendre des dégâts même en esquivant
+                int dégâtsMineurs = 1; // Dégâts réduits lors d'une esquive
+                joueur.modifierStatistique("vie", -dégâtsMineurs);
+
+                appendToCombatLog("Vous avez esquivé l'attaque principale mais " + ennemi.getNom() +
+                        " vous a tout de même effleuré, vous infligeant " + dégâtsMineurs + " point de dégâts !");
+                vieJoueur.setValue(joueur.getStatistique("vie"));
+            } else {
+                appendToCombatLog("Vous avez tous les deux esquivé les attaques !");
+            }
         }
 
         // Réduire la stamina du joueur
@@ -266,8 +278,20 @@ public class CombatUI extends JDialog implements ActionListener {
             appendToCombatLog(ennemi.getNom() + " perce votre défense et vous inflige " + dégâts + " point de dégâts.");
             vieJoueur.setValue(joueur.getStatistique("vie"));
         } else {
-            // Le joueur esquive complètement
-            appendToCombatLog("Vous avez parfaitement paré l'attaque de " + ennemi.getNom() + " !");
+            // Même en défense parfaite, petite chance de recevoir des dégâts
+            int chanceDegatAleatoire = (int) (Math.random() * 100); // 0-99
+
+            if (chanceDegatAleatoire < 15) { // 15% de chance de prendre des dégâts même en défendant bien
+                int dégâtsMinimes = 1;
+                joueur.modifierStatistique("vie", -dégâtsMinimes);
+
+                appendToCombatLog("Malgré votre défense, " + ennemi.getNom() +
+                        " parvient à vous atteindre légèrement, vous infligeant " + dégâtsMinimes
+                        + " point de dégâts.");
+                vieJoueur.setValue(joueur.getStatistique("vie"));
+            } else {
+                appendToCombatLog("Vous avez parfaitement paré l'attaque de " + ennemi.getNom() + " !");
+            }
         }
 
         // Réduire moins la stamina car la défense est moins fatigante
