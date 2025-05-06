@@ -39,10 +39,17 @@ public class Personnage {
 
         // Initialisation des statistiques de base pour notre samouraï
         statistiques.put("honneur", 10);
+        statistiques.put("habileté", 7);
         statistiques.put("force", 8);
         statistiques.put("agilité", 7);
         statistiques.put("sagesse", 6);
         statistiques.put("vie", 20);
+
+        // Ajouter des objets de départ à l'inventaire
+        inventaire.add("Katana de famille");
+        inventaire.add("Armure légère");
+        inventaire.add("Rations de voyage");
+        inventaire.add("Potion de soin");
     }
 
     /**

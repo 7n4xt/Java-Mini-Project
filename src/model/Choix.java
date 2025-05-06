@@ -7,6 +7,7 @@ package model;
 public class Choix {
     private String texte;
     private int chapitreDestinationId;
+    private boolean declencheCombat;
 
     /**
      * Constructeur de Choix
@@ -17,6 +18,20 @@ public class Choix {
     public Choix(String texte, int chapitreDestinationId) {
         this.texte = texte;
         this.chapitreDestinationId = chapitreDestinationId;
+        this.declencheCombat = false;
+    }
+
+    /**
+     * Constructeur de Choix avec option de combat
+     * 
+     * @param texte                 Le texte décrivant le choix
+     * @param chapitreDestinationId L'identifiant du chapitre de destination
+     * @param declencheCombat       Si ce choix déclenche un combat
+     */
+    public Choix(String texte, int chapitreDestinationId, boolean declencheCombat) {
+        this.texte = texte;
+        this.chapitreDestinationId = chapitreDestinationId;
+        this.declencheCombat = declencheCombat;
     }
 
     // Getters
@@ -26,6 +41,10 @@ public class Choix {
 
     public int getChapitreDestinationId() {
         return chapitreDestinationId;
+    }
+
+    public boolean declencheCombat() {
+        return declencheCombat;
     }
 
     @Override

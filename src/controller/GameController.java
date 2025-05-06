@@ -21,6 +21,7 @@ public class GameController {
     private Personnage personnage;
     private Chapitre chapitreActuel;
     private Map<Integer, Boolean> chapitresVisites;
+    private Map<Integer, Integer> chapitresDefaite; // Map associant chapitre -> chapitre de défaite
 
     /**
      * Constructeur du contrôleur de jeu
@@ -33,6 +34,11 @@ public class GameController {
         this.personnage = new Personnage(nomPersonnage);
         this.chapitreActuel = scenario.getChapitreInitial();
         this.chapitresVisites = new HashMap<>();
+        this.chapitresDefaite = new HashMap<>();
+
+        // Initialiser les associations chapitre -> chapitre de défaite
+        // Par exemple, si le joueur perd au chapitre 1, il va au chapitre 8
+        chapitresDefaite.put(1, 8);
     }
 
     /**
@@ -120,6 +126,20 @@ public class GameController {
             System.err.println("Erreur lors du chargement : " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Obtient le chapitre de défaite correspondant au chapitre actuel
+     * 
+     * @param idChapitre ID du chapitre actuel
+     * @return Le chapitre de défaite ou null si non défini
+     */
+    public Chapitre getChapitreDefaite(int idChapitre) {
+        Integer idChapitreDefaite = chapitresDefaite.get(idChapitre);
+        if (idChapitreDefaite != null) {
+            return scenario.getChapitre(idChapitreDefaite);
+        }
+        return null;
     }
 
     // Getters

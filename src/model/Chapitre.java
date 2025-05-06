@@ -12,6 +12,7 @@ public class Chapitre {
     private String texte;
     private List<Choix> choixPossibles;
     private boolean estFin;
+    private Enemy enemy; // Ennemi du chapitre, s'il y en a un
 
     /**
      * Constructeur pour un chapitre standard
@@ -22,6 +23,7 @@ public class Chapitre {
         this.texte = texte;
         this.choixPossibles = new ArrayList<>();
         this.estFin = false;
+        this.enemy = null;
     }
 
     /**
@@ -37,6 +39,27 @@ public class Chapitre {
      */
     public void ajouterChoix(Choix choix) {
         choixPossibles.add(choix);
+    }
+
+    /**
+     * Définit un ennemi pour ce chapitre
+     */
+    public void setEnemy(Enemy enemy) {
+        this.enemy = enemy;
+    }
+
+    /**
+     * Vérifie si le chapitre contient un ennemi
+     */
+    public boolean hasEnemy() {
+        return enemy != null;
+    }
+
+    /**
+     * Récupère l'ennemi du chapitre
+     */
+    public Enemy getEnemy() {
+        return enemy;
     }
 
     // Getters et setters

@@ -2,6 +2,7 @@ package controller;
 
 import model.Chapitre;
 import model.Choix;
+import model.Enemy;
 import model.Scenario;
 
 import java.io.IOException;
@@ -50,12 +51,17 @@ public class ScenarioLoader {
                                 "Vous vous trouvez dans le village de votre enfance. Le vieux maître vous a parlé " +
                                                 "d'une épée légendaire ayant appartenu à votre ancêtre. Cette épée serait cachée "
                                                 +
-                                                "dans un temple perdu dans les montagnes. Vous décidez de partir à sa recherche.");
+                                                "dans un temple perdu dans les montagnes. Vous décidez de partir à sa recherche.\n\n"
+                                                +
+                                                "En sortant du village, vous apercevez un chemin menant aux montagnes, mais un ninja gardien semble surveiller la route.");
 
                 // Chapitre 2: La forêt
                 Chapitre chapitre2 = new Chapitre(2, "La forêt mystérieuse",
-                                "Vous entrez dans une forêt dense et mystérieuse. Les arbres semblent vivants " +
-                                                "et le brouillard rend la visibilité difficile. Vous entendez des bruits étranges.");
+                                "Après avoir vaincu le ninja gardien, vous entrez dans une forêt dense et mystérieuse. "
+                                                +
+                                                "Les arbres semblent vivants et le brouillard rend la visibilité difficile. "
+                                                +
+                                                "Vous entendez des bruits étranges.");
 
                 // Chapitre 3: Les montagnes
                 Chapitre chapitre3 = new Chapitre(3, "Le chemin montagneux",
@@ -84,9 +90,15 @@ public class ScenarioLoader {
                                                 "Les bruits étranges se rapprochent. Vous ne retrouverez jamais le chemin du retour...",
                                 true);
 
+                // Chapitre 8: Défaite contre le ninja gardien
+                Chapitre chapitre8 = new Chapitre(8, "Défaite face au gardien",
+                                "Le ninja s'est montré trop fort pour vous. Ses techniques de combat vous ont pris " +
+                                                "par surprise et vous êtes à terre, incapable de continuer. Votre quête s'achève ici...",
+                                true);
+
                 // Ajouter les choix aux chapitres
-                chapitre1.ajouterChoix(new Choix("Partir immédiatement vers la forêt", 2));
-                chapitre1.ajouterChoix(new Choix("Consulter le vieux maître pour plus d'informations", 2));
+                chapitre1.ajouterChoix(new Choix("Affronter le ninja gardien", 2, true)); // Combat spécial
+                chapitre1.ajouterChoix(new Choix("Essayer de contourner le gardien", 8)); // Conduit à l'échec
 
                 chapitre2.ajouterChoix(new Choix("Suivre le sentier principal", 3));
                 chapitre2.ajouterChoix(new Choix("Explorer les profondeurs de la forêt", 7));
@@ -107,6 +119,14 @@ public class ScenarioLoader {
                 scenario.ajouterChapitre(chapitre5);
                 scenario.ajouterChapitre(chapitre6);
                 scenario.ajouterChapitre(chapitre7);
+                scenario.ajouterChapitre(chapitre8);
+
+                // Créer les ennemis
+                Enemy ninjaGardien = new Enemy("Ninja Gardien", 8, 10,
+                                "Un ninja agile et rapide qui garde le chemin menant aux montagnes. Il porte une armure légère et est armé d'une lame acérée.");
+
+                // Ajouter l'ennemi au premier chapitre
+                chapitre1.setEnemy(ninjaGardien);
 
                 return scenario;
         }
