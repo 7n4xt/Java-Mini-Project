@@ -18,7 +18,7 @@ public class MenuUI extends JFrame {
     private static final Color BUTTON_TEXT_COLOR = new Color(255, 241, 224);
     private static final Font TITLE_FONT = new Font("Yu Mincho", Font.BOLD, 48);
     private static final Font BUTTON_FONT = new Font("Yu Mincho", Font.BOLD, 18);
-    private static final String BACKGROUND_IMAGE = "/resources/background.jpg";
+    private static final String BACKGROUND_IMAGE = "/resources/wp6177681-samurai-4k-wallpapers.jpg";
 
     private JPanel mainMenuPanel;
     private JPanel levelSelectPanel;
@@ -212,7 +212,7 @@ public class MenuUI extends JFrame {
                     g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 
                     // Ajoute un overlay semi-transparent pour rendre le texte plus lisible
-                    g.setColor(new Color(0, 0, 0, 150));
+                    g.setColor(new Color(0, 0, 0, 180));
                     g.fillRect(0, 0, getWidth(), getHeight());
                 } else {
                     g.setColor(BACKGROUND_COLOR);

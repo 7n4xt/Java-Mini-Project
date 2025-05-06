@@ -30,6 +30,7 @@ public class SamuraiSwingUI extends JFrame {
     private static final Font TITLE_FONT = new Font("Yu Mincho", Font.BOLD, 28);
     private static final Font TEXT_FONT = new Font("Yu Mincho", Font.PLAIN, 18);
     private static final Font BUTTON_FONT = new Font("Yu Mincho", Font.BOLD, 16);
+    private static final String BACKGROUND_IMAGE = "/resources/4755308.jpg";
 
     private JPanel mainPanel;
     private JTextArea texteChapitreArea;
@@ -82,8 +83,8 @@ public class SamuraiSwingUI extends JFrame {
 
         // Essayer de charger l'image de fond
         try {
-            // Essayer de charger l'image
-            backgroundImage = new ImageIcon(getClass().getResource("/resources/gameplay_background.jpg")).getImage();
+            // Utiliser l'image définie dans la constante BACKGROUND_IMAGE
+            backgroundImage = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
         } catch (Exception e) {
             System.out.println("Impossible de charger l'image de fond. Utilisation de la couleur par défaut.");
             backgroundImage = null;
@@ -339,7 +340,36 @@ public class SamuraiSwingUI extends JFrame {
         choixPanel.removeAll();
 
         if (chapitre.estFin()) {
-            // Si c'est un chapitre de fin, on affiche un bouton pour recommencer
+            // Si c'est un chapitre de fin, on détermine si c'est une victoire ou une
+            // défaite
+            boolean isVictory = !chapitre.getTitre().contains("Perdu") &&
+                    !chapitre.getTexte().contains("perdu") &&
+                    !chapitre.getTitre().toLowerCase().contains("mort") &&
+                    !chapitre.getTexte().toLowerCase().contains("mort");
+
+            SwingUtilities.invokeLater(() -> {
+                // Titre du dialogue selon le type de fin
+                String title = isVictory ? "Victoire" : "Défaite";
+
+                // Message de fin
+                String message = chapitre.getTexte() + "\n\n" +
+                        "Voulez-vous recommencer pour explorer d'autres chemins, ou retourner au menu principal ?";
+
+                // Afficher le dialogue de fin et attendre la réponse
+                LoseChapterDialog endDialog = new LoseChapterDialog(this, title, message, isVictory);
+                boolean replay = endDialog.showDialogAndWaitForChoice();
+
+                if (replay) {
+                    // Si le joueur veut rejouer
+                    gameController.demarrerPartie();
+                    afficherChapitre(gameController.getChapitreActuel());
+                } else {
+                    // Si le joueur veut quitter
+                    retourMenu();
+                }
+            });
+
+            // On ajoute quand même un bouton pour recommencer au cas où
             JButton recommencerButton = createChoiceButton("Recommencer l'aventure");
             recommencerButton.addActionListener(e -> {
                 gameController.demarrerPartie();
