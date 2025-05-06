@@ -79,5 +79,4 @@ public class Enemy {
         return description;
     }
 }
-Enemy.java
-2 Ko
+
