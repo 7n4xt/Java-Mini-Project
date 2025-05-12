@@ -193,6 +193,7 @@ public class MenuUI extends JFrame {
         // Centrer le panneau d'entrée de nom
         JPanel centerNamePanel = new JPanel(new GridBagLayout());
         centerNamePanel.setOpaque(false);
+
         centerNamePanel.add(nameInputPanel);
 
         nameEntryPanel.add(nameTitlePanel, BorderLayout.NORTH);

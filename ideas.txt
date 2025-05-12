@@ -1,0 +1,2 @@
+when the player choose his name, a screen will show him in which chapter his currently in, same when the gamer
+ finishes the chapter and wants to continue
