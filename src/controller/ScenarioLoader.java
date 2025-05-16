@@ -132,6 +132,93 @@ public class ScenarioLoader {
         }
 
         /**
+         * Crée un scénario pour le Chapitre 2 de L'Épée du Samouraï
+         * 
+         * @return Un scénario de combat pour le Chapitre 2
+         */
+        public static Scenario creerScenarioChapitre2() {
+                // Création du scénario
+                Scenario scenario = new Scenario("L'Épée du Samouraï - Chapitre 2",
+                                "La suite de votre quête pour retrouver l'épée légendaire de votre ancêtre.");
+
+                // Chapitre 1: Le pont d'Hagakure
+                Chapitre chapitre1 = new Chapitre(1, "Le pont d'Hagakure",
+                                "Vous voici enfin sorti de la forêt des Ombres. Devant vous s'ouvre une route menant à un ancien pont de pierre — " +
+                                "le pont d'Hagakure — qui enjambe un large fleuve : le Hiang-Kiang. Au-delà, loin à l'horizon, " + 
+                                "se dressent les monts Shios'ii.");
+
+                // Chapitre 2: L'affrontement avec le samouraï spectral
+                Chapitre chapitre2 = new Chapitre(2, "Le samouraï spectral",
+                                "Alors que vous traversez le pont, le ciel s'obscurcit et l'eau devient rouge comme du sang. " +
+                                "Soudain, une apparition hideuse se profile au bout du pont. C'est un guerrier samouraï mort-vivant, " +
+                                "dont la tête n'est plus qu'un crâne grimaçant portant un casque rouillé.");
+
+                // Chapitre 3: Le village abandonné
+                Chapitre chapitre3 = new Chapitre(3, "Le village abandonné",
+                                "Après avoir vaincu le spectre, vous trouvez un village qui semble avoir été attaqué récemment. " +
+                                "Les maisons sont partiellement détruites et il n'y a personne en vue.");
+
+                // Chapitre 4: L'embuscade
+                Chapitre chapitre4 = new Chapitre(4, "L'embuscade",
+                                "En explorant le village, vous êtes soudainement entouré par un groupe de bandits. " +
+                                "Leur chef s'avance vers vous, défiant quiconque ose lui résister.");
+
+                // Chapitre 5: La carte secrète
+                Chapitre chapitre5 = new Chapitre(5, "La carte secrète",
+                                "Après avoir vaincu les bandits, vous trouvez quelques villageois cachés. " +
+                                "Le chef du village vous remercie et vous remet une ancienne carte qui indique un passage " +
+                                "secret vers les montagnes Shios'ii, vous rapprochant de votre quête.");
+
+                // Chapitre 6: Fin du chapitre 2
+                Chapitre chapitre6 = new Chapitre(6, "La route des montagnes",
+                                "Avec la carte en main, vous reprenez votre route vers les montagnes. " +
+                                "Le chemin sera difficile, mais vous êtes maintenant plus proche de l'épée légendaire de votre ancêtre.",
+                                true);
+
+                // Chapitre 7: Mort face au spectre
+                Chapitre chapitre7 = new Chapitre(7, "Défaite sur le pont",
+                                "Le samouraï spectral était trop puissant. Votre quête s'achève ici, sur ce pont maudit...",
+                                true);
+
+                // Ajouter les choix aux chapitres
+                chapitre1.ajouterChoix(new Choix("Traverser le pont", 2));
+                chapitre1.ajouterChoix(new Choix("Chercher un autre passage", 7));
+
+                chapitre2.ajouterChoix(new Choix("Affronter le spectre", 3, true)); // Combat spécial
+                chapitre2.ajouterChoix(new Choix("Tenter de fuir", 7));
+
+                chapitre3.ajouterChoix(new Choix("Explorer le village", 4));
+                chapitre3.ajouterChoix(new Choix("Contourner le village", 6));
+
+                chapitre4.ajouterChoix(new Choix("Combattre les bandits", 5, true)); // Combat
+                chapitre4.ajouterChoix(new Choix("Tenter de négocier", 5));
+
+                chapitre5.ajouterChoix(new Choix("Continuer vers les montagnes", 6));
+
+                // Créer les ennemis
+                Enemy samourai = new Enemy("Samouraï Spectral", 8, 10,
+                                "Un guerrier mort-vivant dont la tête n'est plus qu'un crâne grimaçant. Ses mains osseuses sont crispées sur un long sabre.");
+
+                Enemy chefBandit = new Enemy("Chef des Bandits", 9, 8,
+                                "Un guerrier robuste portant une armure légère et maniant un katana. Ses yeux reflètent sa cruauté et sa détermination.");
+
+                // Ajouter les ennemis aux chapitres correspondants
+                chapitre2.setEnemy(samourai);
+                chapitre4.setEnemy(chefBandit);
+
+                // Ajouter les chapitres au scénario
+                scenario.ajouterChapitre(chapitre1);
+                scenario.ajouterChapitre(chapitre2);
+                scenario.ajouterChapitre(chapitre3);
+                scenario.ajouterChapitre(chapitre4);
+                scenario.ajouterChapitre(chapitre5);
+                scenario.ajouterChapitre(chapitre6);
+                scenario.ajouterChapitre(chapitre7);
+
+                return scenario;
+        }
+
+        /**
          * Simule le parsing d'un JSON
          * Dans une vraie implémentation, utilisez une bibliothèque JSON
          */

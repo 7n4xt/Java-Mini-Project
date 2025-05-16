@@ -135,12 +135,19 @@ public class MenuUI extends JFrame {
             showNameEntry();
         });
         
-        // Modification des boutons pour les chapitres 2-5
+        // Activer le chapitre 2 avec traitement d'erreurs
         level2Button.setEnabled(true);
         level2Button.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this,
-                "Le Chapitre 2 est en cours de programmation. Merci de votre patience !",
-                "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                selectedChapter = 2;
+                showNameEntry();
+                System.out.println("Chapitre 2 sélectionné");
+            } catch (Exception ex) {
+                System.err.println("Erreur lors de la sélection du chapitre 2: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this,
+                    "Une erreur est survenue lors du chargement du Chapitre 2. Veuillez réessayer.",
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
         });
         
         level3Button.setEnabled(true);
@@ -319,14 +326,21 @@ public class MenuUI extends JFrame {
      */
     private void startGame(String playerName) {
         // Créer le contrôleur de jeu et lancer le jeu
-        controller.ScenarioLoader loader = new controller.ScenarioLoader();
         model.Scenario scenario;
         
         // Sélectionner le scénario en fonction du chapitre choisi
         if (selectedChapter == 2) {
-            scenario = controller.ScenarioLoader.creerScenarioDemonstration(); // Utilise le scénario de démonstration pour le chapitre 2 aussi
+            try {
+                scenario = controller.ScenarioLoader.creerScenarioChapitre2();
+                System.out.println("Chargement du scénario chapitre 2...");
+            } catch (Exception e) {
+                // En cas d'erreur, revenir au scénario de démonstration
+                System.err.println("Erreur lors du chargement du chapitre 2: " + e.getMessage());
+                e.printStackTrace();
+                scenario = controller.ScenarioLoader.creerScenarioDemonstration();
+            }
         } else {
-            scenario = controller.ScenarioLoader.creerScenarioDemonstration(); // Chapitre 1 par défaut
+            scenario = controller.ScenarioLoader.creerScenarioDemonstration();
         }
         
         GameController gameController = new GameController(scenario, playerName);
