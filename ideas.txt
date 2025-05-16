@@ -1,2 +1,3 @@
-when the player choose his name, a screen will show him in which chapter his currently in, same when the gamer
- finishes the chapter and wants to continue
+When the player chooses their name, a screen will show them which chapter they are currently in. The same applies when the gamer finishes a chapter and wants to continue.
+
+Enhancement to the help page.
