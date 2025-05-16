@@ -21,21 +21,27 @@ public class EndChapterDialog extends JDialog {
     private static final String BACKGROUND_IMAGE = "/resources/wp6177681-samurai-4k-wallpapers.jpg";
 
     private boolean playAgain = false;
+    private boolean continueToNextChapter = false;
     private final CountDownLatch latch = new CountDownLatch(1);
     private Image backgroundImage;
     private boolean isVictory;
+    private int nextChapterId = -1;
 
     /**
-     * Constructeur du dialogue de fin de chapitre
+     * Constructeur du dialogue de fin de chapitre avec option de chapitre suivant
      * 
-     * @param parent    La fenêtre parente
-     * @param title     Titre du dialogue (varie selon victoire/défaite)
-     * @param message   Le message à afficher
-     * @param isVictory Indique si c'est une victoire ou une défaite
+     * @param parent         La fenêtre parente
+     * @param title          Titre du dialogue (varie selon victoire/défaite)
+     * @param message        Le message à afficher
+     * @param isVictory      Indique si c'est une victoire ou une défaite
+     * @param hasNextChapter Indique si un chapitre suivant est disponible
+     * @param nextChapterId  L'ID du prochain chapitre (si disponible)
      */
-    public EndChapterDialog(JFrame parent, String title, String message, boolean isVictory) {
+    public EndChapterDialog(JFrame parent, String title, String message, boolean isVictory, boolean hasNextChapter,
+            int nextChapterId) {
         super(parent, title, true);
         this.isVictory = isVictory;
+        this.nextChapterId = nextChapterId;
 
         // Charger l'image de fond
         try {
@@ -45,7 +51,7 @@ public class EndChapterDialog extends JDialog {
             backgroundImage = null;
         }
 
-        initComponents(message);
+        initComponents(message, hasNextChapter);
         setSize(600, 400);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -55,6 +61,7 @@ public class EndChapterDialog extends JDialog {
             @Override
             public void windowClosing(WindowEvent e) {
                 playAgain = false;
+                continueToNextChapter = false;
                 latch.countDown();
                 dispose();
             }
@@ -62,9 +69,16 @@ public class EndChapterDialog extends JDialog {
     }
 
     /**
+     * Constructeur simple pour la compatibilité avec le code existant
+     */
+    public EndChapterDialog(JFrame parent, String title, String message, boolean isVictory) {
+        this(parent, title, message, isVictory, false, -1);
+    }
+
+    /**
      * Initialise les composants du dialogue
      */
-    private void initComponents(String message) {
+    private void initComponents(String message, boolean hasNextChapter) {
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -114,13 +128,14 @@ public class EndChapterDialog extends JDialog {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // Panneau de boutons
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 20, 0));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, hasNextChapter ? 3 : 2, 20, 0));
         buttonPanel.setOpaque(false);
 
         // Bouton pour rejouer
         JButton playAgainButton = createStyledButton("Rejouer");
         playAgainButton.addActionListener(e -> {
             playAgain = true;
+            continueToNextChapter = false;
             latch.countDown();
             dispose();
         });
@@ -129,11 +144,25 @@ public class EndChapterDialog extends JDialog {
         JButton quitButton = createStyledButton("Menu principal");
         quitButton.addActionListener(e -> {
             playAgain = false;
+            continueToNextChapter = false;
             latch.countDown();
             dispose();
         });
 
         buttonPanel.add(playAgainButton);
+
+        // Bouton pour continuer au chapitre suivant (si disponible)
+        if (hasNextChapter && isVictory) {
+            JButton nextChapterButton = createStyledButton("Chapitre Suivant");
+            nextChapterButton.addActionListener(e -> {
+                playAgain = false;
+                continueToNextChapter = true;
+                latch.countDown();
+                dispose();
+            });
+            buttonPanel.add(nextChapterButton);
+        }
+
         buttonPanel.add(quitButton);
 
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -184,5 +213,23 @@ public class EndChapterDialog extends JDialog {
             Thread.currentThread().interrupt();
         }
         return playAgain;
+    }
+
+    /**
+     * Vérifie si le joueur veut continuer au chapitre suivant
+     * 
+     * @return true si le joueur veut continuer au chapitre suivant
+     */
+    public boolean wantContinueToNextChapter() {
+        return continueToNextChapter;
+    }
+
+    /**
+     * Récupère l'ID du prochain chapitre
+     * 
+     * @return l'ID du prochain chapitre
+     */
+    public int getNextChapterId() {
+        return nextChapterId;
     }
 }

@@ -1,10 +1,12 @@
 package view;
 
 import controller.GameController;
+import controller.ScenarioLoader; // Add this import
 import model.Chapitre;
 import model.Choix;
 import model.Enemy;
 import model.Personnage;
+import model.Scenario;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +14,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,13 +42,25 @@ public class SamuraiSwingUI extends JFrame {
     private JPanel statsPanel;
     private Image backgroundImage;
 
+    // Progression des chapitres
+    private Map<Integer, Integer> chapterProgression;
+    private Map<Integer, Boolean> completedChapters;
+
     /**
      * Constructeur de l'interface graphique samouraï
      * 
      * @param gameController Le contrôleur de jeu
      */
     public SamuraiSwingUI(GameController gameController) {
+        super("L'Épée du Samouraï");
         this.gameController = gameController;
+
+        // Initialiser la progression des chapitres
+        chapterProgression = new HashMap<>();
+        completedChapters = new HashMap<>();
+
+        // Chapitre 1 vers Chapitre 2
+        chapterProgression.put(6, 2); // Le chapitre 6 (fin heureuse du chapitre 1) débloque le chapitre 2
 
         // Configuration de la fenêtre principale
         setTitle("L'Épée du Samouraï - " + gameController.getPersonnage().getNom());
@@ -261,6 +276,33 @@ public class SamuraiSwingUI extends JFrame {
     }
 
     /**
+     * Crée un bouton de choix avec le style approprié
+     */
+    private JButton createChoiceButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Yu Mincho", Font.BOLD, 16));
+        button.setForeground(TEXT_COLOR);
+        button.setBackground(BUTTON_COLOR);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(500, 40));
+        
+        // Effet de survol
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(ACCENT_COLOR);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(BUTTON_COLOR);
+            }
+        });
+        
+        return button;
+    }
+
+    /**
      * Met à jour l'affichage du panel des statistiques
      */
     private void updateStatsPanel() {
@@ -333,8 +375,9 @@ public class SamuraiSwingUI extends JFrame {
      * @param chapitre Le chapitre à afficher
      */
     public void afficherChapitre(Chapitre chapitre) {
-        // Affichage progressif du texte du chapitre
-        afficherTexteProgressif(chapitre.getTitre() + "\n\n" + chapitre.getTexte());
+        // Mise à jour du texte du chapitre
+        texteChapitreArea.setText(chapitre.getTitre() + "\n\n" + chapitre.getTexte());
+        texteChapitreArea.setCaretPosition(0);
 
         // Mise à jour des choix
         choixPanel.removeAll();
@@ -348,21 +391,34 @@ public class SamuraiSwingUI extends JFrame {
                     !chapitre.getTitre().toLowerCase().contains("mort") &&
                     !chapitre.getTexte().toLowerCase().contains("mort");
 
+            // Vérifier si ce chapitre permet d'accéder au chapitre suivant
+            boolean hasNextChapter = chapitre.getId() == 6; // Si c'est la fin heureuse du chapitre 1
+            int nextChapterId = hasNextChapter ? 2 : -1; // Chapitre 2
+
             SwingUtilities.invokeLater(() -> {
                 // Titre du dialogue selon le type de fin
                 String title = isVictory ? "Victoire" : "Défaite";
 
                 // Message de fin
                 String message = chapitre.getTexte() + "\n\n" +
-                        "Voulez-vous recommencer pour explorer d'autres chemins, ou retourner au menu principal ?";
+                        (hasNextChapter && isVictory
+                                ? "Voulez-vous continuer au chapitre suivant, recommencer, ou retourner au menu principal ?"
+                                : "Voulez-vous recommencer pour explorer d'autres chemins, ou retourner au menu principal ?");
 
                 // Afficher le dialogue de fin et attendre la réponse
-                EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory);
+                EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory, hasNextChapter,
+                        nextChapterId);
                 boolean replay = endDialog.showDialogAndWaitForChoice();
+                boolean continueNext = endDialog.wantContinueToNextChapter();
 
                 if (replay) {
                     // Si le joueur veut rejouer
                     gameController.demarrerPartie();
+                    afficherChapitre(gameController.getChapitreActuel());
+                } else if (continueNext && hasNextChapter) {
+                    // Si le joueur veut continuer au chapitre suivant
+                    Scenario nextChapterScenario = ScenarioLoader.creerScenarioChapitre2();
+                    gameController.changerScenario(nextChapterScenario);
                     afficherChapitre(gameController.getChapitreActuel());
                 } else {
                     // Si le joueur veut quitter
@@ -377,6 +433,7 @@ public class SamuraiSwingUI extends JFrame {
                 afficherChapitre(gameController.getChapitreActuel());
             });
             choixPanel.add(recommencerButton);
+
         } else {
             // Sinon, on affiche les choix disponibles
             List<Choix> choixPossibles = chapitre.getChoixPossibles();
@@ -432,55 +489,6 @@ public class SamuraiSwingUI extends JFrame {
 
         choixPanel.revalidate();
         choixPanel.repaint();
-    }
-
-    /**
-     * Affiche le texte progressivement dans la zone de texte
-     */
-    private void afficherTexteProgressif(String texte) {
-        texteChapitreArea.setText("");
-        Timer timer = new Timer(30, null); // 30ms au lieu de 50ms
-        final int[] index = {0};
-
-        timer.addActionListener(e -> {
-            if (index[0] < texte.length()) {
-                char currentChar = texte.charAt(index[0]);
-                texteChapitreArea.append(String.valueOf(currentChar));
-                texteChapitreArea.setCaretPosition(texteChapitreArea.getText().length());
-                
-                // Accélérer l'affichage pour les espaces et la ponctuation
-                if (currentChar == ' ' || currentChar == '.' || currentChar == ',' || 
-                    currentChar == '!' || currentChar == '?' || currentChar == '\n') {
-                    // Avancer plus rapidement pour ces caractères
-                    index[0]++;
-                    if (index[0] < texte.length()) {
-                        texteChapitreArea.append(String.valueOf(texte.charAt(index[0])));
-                    }
-                }
-                index[0]++;
-            } else {
-                timer.stop();
-            }
-        });
-
-        timer.start();
-    }
-
-    /**
-     * Crée un bouton de choix avec le style approprié
-     */
-    private JButton createChoiceButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(BUTTON_FONT);
-        button.setForeground(TEXT_COLOR);
-        button.setBackground(BUTTON_COLOR);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setMaximumSize(new Dimension(500, 40));
-
-        return button;
     }
 
     /**

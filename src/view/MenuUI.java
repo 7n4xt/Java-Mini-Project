@@ -1,8 +1,12 @@
 package view;
 
 import controller.GameController;
+import controller.ChapterProgressManager;
+import controller.ScenarioLoader;
+import model.Scenario;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +37,7 @@ public class MenuUI extends JFrame {
     private int selectedChapter = 1; // Variable pour suivre le chapitre sélectionné
     private CharacterAvatar selectedCharacter; // Store selected character
     private String selectedCharacterType = "Samouraï Shogun"; // Default character
+    private ChapterProgressManager progressManager;
 
     /**
      * Constructeur de l'interface de menu
@@ -54,6 +59,8 @@ public class MenuUI extends JFrame {
             System.out.println("Impossible de charger l'image de fond. Utilisation de la couleur par défaut.");
             backgroundImage = null;
         }
+
+        progressManager = new ChapterProgressManager();
 
         // Initialisation des panneaux
         initComponents();
@@ -142,35 +149,35 @@ public class MenuUI extends JFrame {
             showNameEntry();
         });
 
-        level2Button.setEnabled(true);
+        level2Button.setEnabled(progressManager.isChapterCompleted(1));
         level2Button.addActionListener(e -> {
-            try {
+            if (progressManager.isChapterCompleted(1)) {
                 selectedChapter = 2;
                 showNameEntry();
                 System.out.println("Chapitre 2 sélectionné");
-            } catch (Exception ex) {
-                System.err.println("Erreur lors de la sélection du chapitre 2: " + ex.getMessage());
+            } else {
                 JOptionPane.showMessageDialog(this,
-                        "Une erreur est survenue lors du chargement du Chapitre 2. Veuillez réessayer.",
-                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                        "Vous devez compléter le Chapitre 1 avant d'accéder au Chapitre 2.",
+                        "Chapitre verrouillé",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         });
 
-        level3Button.setEnabled(true);
+        level3Button.setEnabled(false);
         level3Button.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     "Le Chapitre 3 est en cours de programmation. Merci de votre patience !",
                     "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        level4Button.setEnabled(true);
+        level4Button.setEnabled(false);
         level4Button.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     "Le Chapitre 4 est en cours de programmation. Merci de votre patience !",
                     "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        level5Button.setEnabled(true);
+        level5Button.setEnabled(false);
         level5Button.addActionListener(e -> {
             JOptionPane.showMessageDialog(this,
                     "Le Chapitre 5 est en cours de programmation. Merci de votre patience !",
