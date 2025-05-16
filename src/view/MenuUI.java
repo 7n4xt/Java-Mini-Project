@@ -25,6 +25,7 @@ public class MenuUI extends JFrame {
     private JPanel nameEntryPanel;
 
     private Image backgroundImage;
+    private int selectedChapter = 1; // Variable pour suivre le chapitre sélectionné
 
     /**
      * Constructeur de l'interface de menu
@@ -123,21 +124,53 @@ public class MenuUI extends JFrame {
         levelButtonPanel.setOpaque(false);
 
         JButton level1Button = createStyledButton("Chapitre 1");
-        JButton level2Button = createStyledButton("Bientôt disponible");
-        JButton level3Button = createStyledButton("Bientôt disponible");
-        JButton level4Button = createStyledButton("Bientôt disponible");
+        JButton level2Button = createStyledButton("Chapitre 2"); // Renommé de "Bientôt disponible" à "Chapitre 2"
+        JButton level3Button = createStyledButton("chapitre 3");
+        JButton level4Button = createStyledButton("chapitre 4");
+        JButton level5Button = createStyledButton("chapitre 5");
         JButton backFromLevelButton = createStyledButton("Retour");
 
-        level1Button.addActionListener(e -> showNameEntry());
-        level2Button.setEnabled(false);
-        level3Button.setEnabled(false);
-        level4Button.setEnabled(false);
+        level1Button.addActionListener(e -> {
+            selectedChapter = 1;
+            showNameEntry();
+        });
+        
+        // Modification des boutons pour les chapitres 2-5
+        level2Button.setEnabled(true);
+        level2Button.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                "Le Chapitre 2 est en cours de programmation. Merci de votre patience !",
+                "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
+        level3Button.setEnabled(true);
+        level3Button.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                "Le Chapitre 3 est en cours de programmation. Merci de votre patience !",
+                "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
+        level4Button.setEnabled(true);
+        level4Button.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                "Le Chapitre 4 est en cours de programmation. Merci de votre patience !",
+                "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
+        level5Button.setEnabled(true);
+        level5Button.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                "Le Chapitre 5 est en cours de programmation. Merci de votre patience !",
+                "Chapitre en développement", JOptionPane.INFORMATION_MESSAGE);
+        });
+        
         backFromLevelButton.addActionListener(e -> showMainMenu());
 
         addButtonWithSpacing(levelButtonPanel, level1Button);
         addButtonWithSpacing(levelButtonPanel, level2Button);
         addButtonWithSpacing(levelButtonPanel, level3Button);
         addButtonWithSpacing(levelButtonPanel, level4Button);
+        addButtonWithSpacing(levelButtonPanel, level5Button);
         addButtonWithSpacing(levelButtonPanel, backFromLevelButton);
 
         // Centrer les boutons
@@ -287,7 +320,15 @@ public class MenuUI extends JFrame {
     private void startGame(String playerName) {
         // Créer le contrôleur de jeu et lancer le jeu
         controller.ScenarioLoader loader = new controller.ScenarioLoader();
-        model.Scenario scenario = controller.ScenarioLoader.creerScenarioDemonstration();
+        model.Scenario scenario;
+        
+        // Sélectionner le scénario en fonction du chapitre choisi
+        if (selectedChapter == 2) {
+            scenario = controller.ScenarioLoader.creerScenarioDemonstration(); // Utilise le scénario de démonstration pour le chapitre 2 aussi
+        } else {
+            scenario = controller.ScenarioLoader.creerScenarioDemonstration(); // Chapitre 1 par défaut
+        }
+        
         GameController gameController = new GameController(scenario, playerName);
 
         // Fermer ce menu
