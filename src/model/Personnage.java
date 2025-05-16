@@ -54,9 +54,12 @@ public class Personnage {
 
     /**
      * Ajoute un objet à l'inventaire
+     * @param item Nom de l'objet à ajouter
      */
-    public void ajouterObjet(String objet) {
-        inventaire.add(objet);
+    public void ajouterInventaire(String item) {
+        if (!inventaire.contains(item)) {
+            inventaire.add(item);
+        }
     }
 
     /**
@@ -77,10 +80,18 @@ public class Personnage {
 
     /**
      * Modifie la valeur d'une statistique
+     * @param nom Nom de la statistique
+     * @param valeur Valeur à ajouter (peut être négative)
      */
-    public void modifierStatistique(String nom, int delta) {
-        int valeurActuelle = statistiques.getOrDefault(nom, 0);
-        statistiques.put(nom, valeurActuelle + delta);
+    public void modifierStatistique(String nom, int valeur) {
+        if (statistiques.containsKey(nom)) {
+            int nouvelleValeur = statistiques.get(nom) + valeur;
+            // Valeur minimum 0 pour éviter les statistiques négatives
+            statistiques.put(nom, Math.max(0, nouvelleValeur));
+        } else {
+            // Si la statistique n'existe pas encore, la créer
+            statistiques.put(nom, Math.max(0, valeur));
+        }
     }
 
     /**
@@ -112,5 +123,10 @@ public class Personnage {
 
     public Map<String, Integer> getStatistiques() {
         return new HashMap<>(statistiques);
+    }
+
+    public void ajouterObjet(String key) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ajouterObjet'");
     }
 }

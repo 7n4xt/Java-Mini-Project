@@ -24,30 +24,109 @@ public class GameController {
     private Map<Integer, Integer> chapitresDefaite; // Map associant chapitre -> chapitre de défaite
 
     /**
-     * Constructeur du contrôleur de jeu
-     * 
-     * @param scenario      Le scénario du jeu
-     * @param nomPersonnage Nom du personnage joueur
-     */
-    public GameController(Scenario scenario, String nomPersonnage) {
-        this.scenario = scenario;
-        this.personnage = new Personnage(nomPersonnage);
-        this.chapitreActuel = scenario.getChapitreInitial();
-        this.chapitresVisites = new HashMap<>();
-        this.chapitresDefaite = new HashMap<>();
+         * Constructeur du contrôleur de jeu avec classe ou type de personnage
+         * @param scenario Le scénario du jeu
+         * @param nomJoueur Le nom du joueur
+         * @param personnageType La classe ou le type du personnage (Samouraï, Ninja, Samouraï Shogun, etc.)
+         */
+        public GameController(Scenario scenario, String nomJoueur, String personnageType) {
+            this.scenario = scenario;
+            this.chapitresVisites = new HashMap<>();
+            personnage = new Personnage(nomJoueur);
+    
+            // Ajuster les statistiques selon la classe ou le type du personnage
+            switch (personnageType) {
+                case "Samouraï":
+                    personnage.modifierStatistique("HABILETÉ", 2);
+                    personnage.modifierStatistique("ENDURANCE", 2);
+                    personnage.ajouterInventaire("Katana");
+                    break;
+                case "Ninja":
+                    personnage.modifierStatistique("HABILETÉ", 3);
+                    personnage.modifierStatistique("CHANCE", 1);
+                    personnage.ajouterInventaire("Shuriken");
+                    personnage.ajouterInventaire("Fumigène");
+                    break;
+                case "Ronin":
+                    personnage.modifierStatistique("HABILETÉ", 2);
+                    personnage.modifierStatistique("ENDURANCE", 1);
+                    personnage.modifierStatistique("CHANCE", 1);
+                    personnage.ajouterInventaire("Daisho");
+                    break;
+                case "Moine":
+                    personnage.modifierStatistique("ENDURANCE", 3);
+                    personnage.modifierStatistique("CHANCE", 2);
+                    personnage.ajouterInventaire("Bâton Bo");
+                    break;
+                case "Samouraï Shogun":
+                    personnage.modifierStatistique("HABILETÉ", 2);
+                    personnage.modifierStatistique("ENDURANCE", 3);
+                    personnage.modifierStatistique("HONNEUR", 3);
+                    personnage.ajouterInventaire("Daisho légendaire");
+                    personnage.ajouterInventaire("Armure d'apparat");
+                    personnage.ajouterInventaire("Bannière de clan");
+                    break;
+                case "Samouraï Daimyo":
+                    personnage.modifierStatistique("HABILETÉ", 1);
+                    personnage.modifierStatistique("ENDURANCE", 2);
+                    personnage.modifierStatistique("CHANCE", 2);
+                    personnage.modifierStatistique("HONNEUR", 2);
+                    personnage.ajouterInventaire("Katana de famille");
+                    personnage.ajouterInventaire("Armure laquée");
+                    personnage.ajouterInventaire("Étendard noble");
+                    break;
+                case "Samouraï Hatamoto":
+                    personnage.modifierStatistique("HABILETÉ", 3);
+                    personnage.modifierStatistique("ENDURANCE", 2);
+                    personnage.modifierStatistique("HONNEUR", 1);
+                    personnage.ajouterInventaire("Katana d'élite");
+                    personnage.ajouterInventaire("Armure légère");
+                    personnage.ajouterInventaire("Étendard du Shogun");
+                    break;
+                case "Samouraï Kensai":
+                    personnage.modifierStatistique("HABILETÉ", 4);
+                    personnage.modifierStatistique("ENDURANCE", 1);
+                    personnage.modifierStatistique("CHANCE", 1);
+                    personnage.ajouterInventaire("Nodachi parfait");
+                    personnage.ajouterInventaire("Kimono de cérémonie");
+                    personnage.ajouterInventaire("Parchemin de techniques");
+                    break;
+                default:
+                    // Statistiques par défaut
+                    personnage.modifierStatistique("HABILETÉ", 2);
+                    personnage.modifierStatistique("ENDURANCE", 2);
+                    personnage.ajouterInventaire("Katana");
+                    break;
+            }
+    
+            demarrerPartie();
+        }
 
-        // Initialiser les associations chapitre -> chapitre de défaite
-        // Par exemple, si le joueur perd au chapitre 1, il va au chapitre 8
-        chapitresDefaite.put(1, 8);
+    /**
+     * Constructeur du contrôleur de jeu (version simple, sans classe de personnage)
+     * @param scenario Le scénario du jeu
+     * @param nomJoueur Le nom du joueur
+     */
+    public GameController(Scenario scenario, String nomJoueur) {
+        this.scenario = scenario;
+        this.personnage = new Personnage(nomJoueur);
+        this.chapitresVisites = new HashMap<>();
+        demarrerPartie();
     }
 
     /**
-     * Démarre une nouvelle partie
+     * Démarre ou redémarre une partie
      */
     public void demarrerPartie() {
-        this.chapitreActuel = scenario.getChapitreInitial();
-        this.chapitresVisites.clear();
-        marquerChapitreVisite(chapitreActuel.getId());
+        // Assurez-vous que chapitresVisites est initialisé avant de l'utiliser
+        if (chapitresVisites == null) {
+            chapitresVisites = new HashMap<>();
+        } else {
+            chapitresVisites.clear();
+        }
+        
+        // Réinitialiser le chapitre courant au premier chapitre du scénario
+        chapitreActuel = scenario.getChapitres().get(1);
     }
 
     /**
