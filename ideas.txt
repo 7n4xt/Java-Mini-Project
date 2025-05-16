@@ -1,3 +1,13 @@
+<<<<<<< HEAD
 When the player chooses their name, a screen will show them which chapter they are currently in. The same applies when the gamer finishes a chapter and wants to continue.
 
 Enhancement to the help page.
+=======
+when the player choose his name, a screen will show him in which chapter his currently in, same when the gamer
+ finishes the chapter and wants to continue
+
+ pour les chapitres en vas faire une aide lorsquil clique dessus ya un message  qui apparait en disant il est en cours de programmation en ajoute tout les chapitres 
+
+ il faut faire le tuto 
+ comment penser  le jeux peux evoluer 
+>>>>>>> refs/remotes/origin/main
