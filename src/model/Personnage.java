@@ -64,6 +64,15 @@ public class Personnage {
 
     /**
      * Retire un objet de l'inventaire
+     * @param item L'objet à retirer
+     * @return true si l'objet a été retiré, false s'il n'était pas présent
+     */
+    public boolean retirerInventaire(String item) {
+        return inventaire.remove(item);
+    }
+
+    /**
+     * Retire un objet de l'inventaire
      * 
      * @return true si l'objet a été retiré, false s'il n'était pas présent
      */

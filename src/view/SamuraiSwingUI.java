@@ -549,4 +549,222 @@ public class SamuraiSwingUI extends JFrame {
             menuUI.setVisible(true);
         }
     }
+    
+    /**
+     * Ouvre une fenêtre d'inventaire pendant le combat
+     * @param enemy L'ennemi actuellement affronté
+     * @return true si un objet a été utilisé
+     */
+    private boolean ouvrirInventaireCombat(Enemy enemy) {
+        Personnage personnage = gameController.getPersonnage();
+        List<String> inventaire = personnage.getInventaire();
+        
+        if (inventaire.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                    "Votre inventaire est vide !",
+                    "Inventaire", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        
+        // Créer la fenêtre de combat
+        JDialog inventaireDialog = new JDialog(this, "Inventaire de Combat", true);
+        inventaireDialog.setSize(500, 400);
+        inventaireDialog.setLocationRelativeTo(this);
+        
+        // Créer un panneau avec l'apparence du jeu
+        JPanel mainPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                    g.setColor(new Color(0, 0, 0, 180)); // Overlay semi-transparent
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                } else {
+                    g.setColor(BACKGROUND_COLOR);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                }
+            }
+        };
+        mainPanel.setLayout(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // Titre
+        JLabel titleLabel = new JLabel("Utiliser un objet pendant le combat", JLabel.CENTER);
+        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setForeground(TEXT_COLOR);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        
+        // Description
+        JTextArea descArea = new JTextArea(
+                "Sélectionnez un objet à utiliser pour obtenir un avantage au combat.\n" +
+                "La nourriture de voyage peut restaurer votre endurance et augmenter temporairement votre force.");
+        descArea.setEditable(false);
+        descArea.setWrapStyleWord(true);
+        descArea.setLineWrap(true);
+        descArea.setOpaque(false);
+        descArea.setForeground(TEXT_COLOR);
+        descArea.setFont(TEXT_FONT);
+        mainPanel.add(descArea, BorderLayout.CENTER);
+        
+        // Liste des objets avec leurs effets
+        JPanel itemsPanel = new JPanel();
+        itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
+        itemsPanel.setOpaque(false);
+        
+        // Variable pour capturer si un objet a été utilisé
+        final boolean[] itemUsed = {false};
+        
+        for (String item : inventaire) {
+            JButton itemButton = createItemButton(item, enemy);
+            itemButton.addActionListener(e -> {
+                boolean used = utiliserObjet(item, personnage, enemy);
+                if (used) {
+                    itemUsed[0] = true;
+                    updateStatsPanel(); // Mettre à jour les statistiques
+                    inventaireDialog.dispose();
+                }
+            });
+            itemsPanel.add(itemButton);
+            itemsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        }
+        
+        JScrollPane scrollPane = new JScrollPane(itemsPanel);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(null);
+        
+        // Panneau pour les objets et les boutons
+        JPanel southPanel = new JPanel(new BorderLayout());
+        southPanel.setOpaque(false);
+        southPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        // Bouton de fermeture
+        JButton fermerButton = createStyledButton("Retour au combat");
+        fermerButton.addActionListener(e -> inventaireDialog.dispose());
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(fermerButton);
+        southPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        mainPanel.add(southPanel, BorderLayout.SOUTH);
+        
+        inventaireDialog.setContentPane(mainPanel);
+        inventaireDialog.setVisible(true);
+        
+        return itemUsed[0];
+    }
+    
+    /**
+     * Crée un bouton d'objet d'inventaire avec description pour le combat
+     */
+    private JButton createItemButton(String item, Enemy enemy) {
+        JButton button = new JButton();
+        button.setLayout(new BorderLayout());
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        String icon = Personnage.getItemIcon(item);
+        String effet = getItemEffectDescription(item);
+        
+        JLabel iconLabel = new JLabel(icon + " " + item);
+        iconLabel.setForeground(TEXT_COLOR);
+        iconLabel.setFont(new Font("Yu Mincho", Font.BOLD, 16));
+        
+        JLabel effectLabel = new JLabel(effet);
+        effectLabel.setForeground(ACCENT_COLOR);
+        effectLabel.setFont(new Font("Yu Mincho", Font.ITALIC, 14));
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(iconLabel);
+        panel.add(effectLabel);
+        panel.setBackground(new Color(40, 30, 20));
+        panel.setBorder(BorderFactory.createLineBorder(ACCENT_COLOR, 1));
+        
+        button.add(panel, BorderLayout.CENTER);
+        button.setPreferredSize(new Dimension(400, 60));
+        button.setMaximumSize(new Dimension(400, 60));
+        
+        return button;
+    }
+    
+    /**
+     * Renvoie la description de l'effet d'un objet au combat
+     */
+    private String getItemEffectDescription(String item) {
+        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")) {
+            return "Restaure 2 points d'ENDURANCE et donne +1 en HABILETÉ pour ce combat";
+        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")) {
+            return "Restaure 4 points d'ENDURANCE";
+        } else if (item.equalsIgnoreCase("Saké") || item.equalsIgnoreCase("Élixir")) {
+            return "+2 en HABILETÉ pour ce combat";
+        } else if (item.contains("Katana") || item.contains("Épée") || item.contains("Sabre")) {
+            return "+1 en HABILETÉ pour ce combat";
+        } else if (item.contains("Armure")) {
+            return "Réduit les dégâts reçus de 1 point";
+        } else if (item.contains("Amulette") || item.contains("Talisman")) {
+            return "+2 en CHANCE pour ce combat";
+        }
+        return "Utilisable au combat";
+    }
+    
+    /**
+     * Utilise un objet pendant le combat et applique ses effets
+     * @return true si l'objet a été utilisé
+     */
+    private boolean utiliserObjet(String item, Personnage personnage, Enemy enemy) {
+        boolean consommable = true;
+        String message = "";
+        
+        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")) {
+            // Restaure de l'endurance et donne un bonus d'habileté temporaire
+            personnage.modifierStatistique("ENDURANCE", 2);
+            personnage.modifierStatistique("HABILETÉ", 1);
+            message = "Vous consommez votre nourriture de voyage. Vous regagnez 2 points d'ENDURANCE et " +
+                     "obtenez +1 en HABILETÉ pour ce combat!";
+        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")) {
+            // Restaure plus d'endurance
+            personnage.modifierStatistique("ENDURANCE", 4);
+            message = "Vous utilisez votre potion de guérison. Vous regagnez 4 points d'ENDURANCE!";
+        } else if (item.equalsIgnoreCase("Saké") || item.equalsIgnoreCase("Élixir")) {
+            // Donne un bonus d'habileté temporaire plus important
+            personnage.modifierStatistique("HABILETÉ", 2);
+            message = "Vous buvez votre " + item + ". Vous obtenez +2 en HABILETÉ pour ce combat!";
+        } else if (item.contains("Katana") || item.contains("Épée") || item.contains("Sabre")) {
+            // Les armes ne sont pas consommées
+            personnage.modifierStatistique("HABILETÉ", 1);
+            message = "Vous utilisez votre " + item + " avec une technique spéciale. +1 en HABILETÉ pour ce combat!";
+            consommable = false;
+        } else if (item.contains("Armure")) {
+            // Les armures ne sont pas consommées
+            personnage.modifierStatistique("ENDURANCE", 1);
+            message = "Vous ajustez votre " + item + " pour une meilleure protection. Réduit les dégâts reçus de 1 point!";
+            consommable = false;
+        } else if (item.contains("Amulette") || item.contains("Talisman")) {
+            // Les amulettes ne sont pas consommées
+            personnage.modifierStatistique("CHANCE", 2);
+            message = "Vous invoquez le pouvoir de votre " + item + ". +2 en CHANCE pour ce combat!";
+            consommable = false;
+        } else {
+            // Objet inconnu
+            JOptionPane.showMessageDialog(this, 
+                    "Vous ne pouvez pas utiliser cet objet au combat.",
+                    "Objet inutilisable", JOptionPane.INFORMATION_MESSAGE);
+            return false;
+        }
+        
+        // Afficher le message d'utilisation
+        JOptionPane.showMessageDialog(this, message, "Utilisation d'objet", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Supprimer l'objet s'il est consommable
+        if (consommable) {
+            personnage.retirerInventaire(item);
+        }
+        
+        return true;
+    }
 }

@@ -31,6 +31,7 @@ public class CombatUI extends JDialog implements ActionListener {
     private JButton attaquerButton;
     private JButton défendreButton;
     private JButton inventaireButton;
+    private JButton fuirButton;
 
     private boolean combatTerminé = false;
     private boolean victoire = false;
@@ -132,15 +133,17 @@ public class CombatUI extends JDialog implements ActionListener {
         // Panneau inférieur avec les boutons d'action
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new GridLayout(1, 3, 10, 0));
+        buttonPanel.setLayout(new GridLayout(1, 4, 10, 0));
 
         attaquerButton = createButton("Attaquer");
         défendreButton = createButton("Se défendre");
         inventaireButton = createButton("Inventaire");
+        fuirButton = createButton("Fuir");
 
         buttonPanel.add(attaquerButton);
         buttonPanel.add(défendreButton);
         buttonPanel.add(inventaireButton);
+        buttonPanel.add(fuirButton);
 
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -182,6 +185,8 @@ public class CombatUI extends JDialog implements ActionListener {
             défendre();
         } else if (e.getSource() == inventaireButton) {
             ouvrirInventaire();
+        } else if (e.getSource() == fuirButton) {
+            fuir();
         }
 
         // Vérifier si le combat est terminé
@@ -441,6 +446,7 @@ public class CombatUI extends JDialog implements ActionListener {
         attaquerButton.setEnabled(enabled && staminaJoueur.getValue() >= 15);
         défendreButton.setEnabled(enabled);
         inventaireButton.setEnabled(enabled);
+        fuirButton.setEnabled(enabled);
     }
 
     /**
@@ -449,6 +455,23 @@ public class CombatUI extends JDialog implements ActionListener {
     private void appendToCombatLog(String text) {
         combatLog.append("\n" + text);
         combatLog.setCaretPosition(combatLog.getDocument().getLength());
+    }
+
+    /**
+     * Action de fuite
+     */
+    private void fuir() {
+        appendToCombatLog("Vous tentez de fuir le combat...");
+        int chanceFuite = (int) (Math.random() * 100); // 0-99
+
+        if (chanceFuite < 50) { // 50% de chance de réussir à fuir
+            combatTerminé = true;
+            victoire = false;
+            finCombat("Vous avez réussi à fuir le combat !");
+        } else {
+            appendToCombatLog("Votre tentative de fuite échoue, l'ennemi vous rattrape !");
+            réduireStamina(10);
+        }
     }
 
     /**
