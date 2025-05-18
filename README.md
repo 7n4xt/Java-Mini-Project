@@ -21,7 +21,6 @@ Le jeu "L'Épée du Samouraï" est une adaptation numérique d'un livre-jeu, dé
 - `Scenario` : Organise l'ensemble des chapitres du jeu
 
 #### Vue
-- `TextUI` : Interface texte pour les terminaux
 - `SamuraiSwingUI` : Interface graphique principale avec style samouraï
 - `CombatUI` : Interface de combat
 - `ChapterMapUI` : Carte des chapitres montrant la progression

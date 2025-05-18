@@ -1,8 +1,8 @@
-1. fix text glitch
+1. fix text glitch 
 2. make the game playble like items make the game more enjoyble 
 3. inventory issues
-4. sound effects 
+4. sound effects ?
 5. when clicking on an unlocked chapter it should show him a popup that this chapter is not availeble
-6. change font of the game
+6. change font of the game *
 7. try to make the game contunauble 
 8. make the game in a jar file
