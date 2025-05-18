@@ -26,7 +26,7 @@ public class MenuUI extends JFrame {
     private static final Color BUTTON_TEXT_COLOR = new Color(255, 241, 224);
     private static final Font TITLE_FONT = new Font("Yu Mincho", Font.BOLD, 48);
     private static final Font BUTTON_FONT = new Font("Yu Mincho", Font.BOLD, 18);
-    private static final String BACKGROUND_IMAGE = "/resources/wp6177681-samurai-4k-wallpapers.jpg";
+    private static final String BACKGROUND_IMAGE = "/Assets/Photos/wp6177681-samurai-4k-wallpapers.jpg";
 
     private JPanel mainMenuPanel;
     private JPanel levelSelectPanel;

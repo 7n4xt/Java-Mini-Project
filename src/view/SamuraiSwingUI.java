@@ -34,7 +34,7 @@ public class SamuraiSwingUI extends JFrame {
     private static final Font TITLE_FONT = new Font("Yu Mincho", Font.BOLD, 28);
     private static final Font TEXT_FONT = new Font("Yu Mincho", Font.PLAIN, 18);
     private static final Font BUTTON_FONT = new Font("Yu Mincho", Font.BOLD, 16);
-    private static final String BACKGROUND_IMAGE = "/resources/4755308.jpg";
+    private static final String BACKGROUND_IMAGE = "/Assets/Photos/4755308.jpg";
 
     private JPanel mainPanel;
     private JTextArea texteChapitreArea;

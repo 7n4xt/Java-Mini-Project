@@ -18,7 +18,7 @@ public class LoseChapterDialog extends JDialog {
     private static final Font TITLE_FONT = new Font("Yu Mincho", Font.BOLD, 28);
     private static final Font TEXT_FONT = new Font("Yu Mincho", Font.PLAIN, 18);
     private static final Font BUTTON_FONT = new Font("Yu Mincho", Font.BOLD, 16);
-    private static final String BACKGROUND_IMAGE = "/resources/wp6177681-samurai-4k-wallpapers.jpg";
+    private static final String BACKGROUND_IMAGE = "/Assets/Photos/wp6177681-samurai-4k-wallpapers.jpg";
 
     private boolean playAgain = false;
     private final CountDownLatch latch = new CountDownLatch(1);
