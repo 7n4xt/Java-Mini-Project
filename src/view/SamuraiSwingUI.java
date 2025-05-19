@@ -109,6 +109,9 @@ public class SamuraiSwingUI extends JFrame {
         // Création des composants
         initComponents();
 
+        // Appliquer les corrections de rendu de texte
+        SamuraiSwingUIFixer.applyFixes(this);
+
         // Affichage du premier chapitre
         afficherChapitre(gameController.getChapitreActuel());
     }
@@ -173,9 +176,10 @@ public class SamuraiSwingUI extends JFrame {
         texteChapitreArea.setWrapStyleWord(true);
         texteChapitreArea.setFont(TEXT_FONT);
         texteChapitreArea.setForeground(TEXT_COLOR);
-        texteChapitreArea.setBackground(new Color(0, 0, 0, 100));
+        texteChapitreArea.setBackground(new Color(0, 0, 0, 220)); // Darker background for better contrast
         texteChapitreArea.setBorder(new EmptyBorder(20, 20, 20, 20));
-        texteChapitreArea.setMargin(new Insets(10, 10, 10, 10));
+        texteChapitreArea.setMargin(new Insets(15, 15, 15, 15)); // Increased margins
+        texteChapitreArea.setOpaque(true); // Make opaque for better text rendering
 
         // Encapsuler dans un JScrollPane pour gérer le défilement
         JScrollPane scrollPane = new JScrollPane(texteChapitreArea);
@@ -199,6 +203,13 @@ public class SamuraiSwingUI extends JFrame {
 
         // Ajout du panel principal à la fenêtre
         setContentPane(mainPanel);
+
+        // Appliquer les optimisations de rendu de texte
+        try {
+            TextRenderingFixer.fixTextRendering(texteChapitreArea);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'optimisation du rendu de texte: " + e.getMessage());
+        }
     }
 
     /**
@@ -288,17 +299,18 @@ public class SamuraiSwingUI extends JFrame {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.setMaximumSize(new Dimension(500, 40));
-        
+
         // Effet de survol
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(ACCENT_COLOR);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(BUTTON_COLOR);
             }
         });
-        
+
         return button;
     }
 
@@ -376,7 +388,15 @@ public class SamuraiSwingUI extends JFrame {
      */
     public void afficherChapitre(Chapitre chapitre) {
         // Mise à jour du texte du chapitre
-        texteChapitreArea.setText(chapitre.getTitre() + "\n\n" + chapitre.getTexte());
+        String chapterTitle = chapitre.getTitre();
+        String chapterText = chapitre.getTexte();
+
+        // Format the text with proper spacing and styling
+        texteChapitreArea.setText("");
+        texteChapitreArea.setFont(TITLE_FONT); // Use title font for the chapter title
+        texteChapitreArea.append(chapterTitle + "\n\n");
+        texteChapitreArea.setFont(TEXT_FONT); // Switch back to normal font for content
+        texteChapitreArea.append(chapterText);
         texteChapitreArea.setCaretPosition(0);
 
         // Mise à jour des choix
@@ -407,13 +427,14 @@ public class SamuraiSwingUI extends JFrame {
                     !chapitre.getTitre().toLowerCase().contains("mort") &&
                     !chapitre.getTexte().toLowerCase().contains("mort");
 
-            // Vérifier si ce chapitre permet d'accéder au chapitre suivant (dans ce cas chapitre 6)
+            // Vérifier si ce chapitre permet d'accéder au chapitre suivant (dans ce cas
+            // chapitre 6)
             boolean hasNextChapter = chapitre.getId() == 6; // Si c'est la fin heureuse du chapitre 1
             int nextChapterId = hasNextChapter ? 2 : -1; // Chapitre 2
 
             SwingUtilities.invokeLater(() -> {
                 // Titre du dialogue selon le type de fin
-                String title = isVictory ? "Victoire" : "Défaite";
+                String dialogTitle = isVictory ? "Victoire" : "Défaite";
 
                 // Message de fin
                 String message = chapitre.getTexte() + "\n\n" +
@@ -423,7 +444,8 @@ public class SamuraiSwingUI extends JFrame {
 
                 try {
                     // Afficher le dialogue de fin et attendre la réponse
-                    EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory, hasNextChapter,
+                    EndChapterDialog endDialog = new EndChapterDialog(this, dialogTitle, message, isVictory,
+                            hasNextChapter,
                             nextChapterId);
                     boolean replay = endDialog.showDialogAndWaitForChoice();
                     boolean continueNext = endDialog.wantContinueToNextChapter();
@@ -449,25 +471,25 @@ public class SamuraiSwingUI extends JFrame {
                                     afficherChapitre(nextChapitre);
                                 } else {
                                     System.err.println("ERROR: Failed to get chapter from controller!");
-                                    JOptionPane.showMessageDialog(this, 
-                                        "Erreur lors du chargement du chapitre suivant. Le chapitre est null.", 
-                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(this,
+                                            "Erreur lors du chargement du chapitre suivant. Le chapitre est null.",
+                                            "Erreur", JOptionPane.ERROR_MESSAGE);
                                     // Fallback to main menu
                                     retourMenu();
                                 }
                             } else {
                                 System.err.println("ERROR: Failed to create Chapter 2 scenario!");
-                                JOptionPane.showMessageDialog(this, 
-                                    "Erreur lors du chargement du chapitre 2. Le scénario est null.", 
-                                    "Erreur", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this,
+                                        "Erreur lors du chargement du chapitre 2. Le scénario est null.",
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
                                 // Fallback to main menu
                                 retourMenu();
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            JOptionPane.showMessageDialog(this, 
-                                "Erreur lors du chargement du chapitre 2: " + ex.getMessage(), 
-                                "Erreur", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(this,
+                                    "Erreur lors du chargement du chapitre 2: " + ex.getMessage(),
+                                    "Erreur", JOptionPane.ERROR_MESSAGE);
                             // Fallback to main menu
                             retourMenu();
                         }
@@ -477,8 +499,9 @@ public class SamuraiSwingUI extends JFrame {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Erreur lors du traitement de la fin de chapitre: " + e.getMessage(),
-                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur lors du traitement de la fin de chapitre: " + e.getMessage(),
+                            "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
@@ -604,28 +627,29 @@ public class SamuraiSwingUI extends JFrame {
             menuUI.setVisible(true);
         }
     }
-    
+
     /**
      * Ouvre une fenêtre d'inventaire pendant le combat
+     * 
      * @param enemy L'ennemi actuellement affronté
      * @return true si un objet a été utilisé
      */
     private boolean ouvrirInventaireCombat(Enemy enemy) {
         Personnage personnage = gameController.getPersonnage();
         List<String> inventaire = personnage.getInventaire();
-        
+
         if (inventaire.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
+            JOptionPane.showMessageDialog(this,
                     "Votre inventaire est vide !",
                     "Inventaire", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
-        
+
         // Créer la fenêtre de combat
         JDialog inventaireDialog = new JDialog(this, "Inventaire de Combat", true);
         inventaireDialog.setSize(500, 400);
         inventaireDialog.setLocationRelativeTo(this);
-        
+
         // Créer un panneau avec l'apparence du jeu
         JPanel mainPanel = new JPanel() {
             @Override
@@ -643,17 +667,17 @@ public class SamuraiSwingUI extends JFrame {
         };
         mainPanel.setLayout(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
+
         // Titre
         JLabel titleLabel = new JLabel("Utiliser un objet pendant le combat", JLabel.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
         mainPanel.add(titleLabel, BorderLayout.NORTH);
-        
+
         // Description
         JTextArea descArea = new JTextArea(
                 "Sélectionnez un objet à utiliser pour obtenir un avantage au combat.\n" +
-                "La nourriture de voyage peut restaurer votre endurance et augmenter temporairement votre force.");
+                        "La nourriture de voyage peut restaurer votre endurance et augmenter temporairement votre force.");
         descArea.setEditable(false);
         descArea.setWrapStyleWord(true);
         descArea.setLineWrap(true);
@@ -661,15 +685,15 @@ public class SamuraiSwingUI extends JFrame {
         descArea.setForeground(TEXT_COLOR);
         descArea.setFont(TEXT_FONT);
         mainPanel.add(descArea, BorderLayout.CENTER);
-        
+
         // Liste des objets avec leurs effets
         JPanel itemsPanel = new JPanel();
         itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
         itemsPanel.setOpaque(false);
-        
+
         // Variable pour capturer si un objet a été utilisé
-        final boolean[] itemUsed = {false};
-        
+        final boolean[] itemUsed = { false };
+
         for (String item : inventaire) {
             JButton itemButton = createItemButton(item, enemy);
             itemButton.addActionListener(e -> {
@@ -683,34 +707,34 @@ public class SamuraiSwingUI extends JFrame {
             itemsPanel.add(itemButton);
             itemsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         }
-        
+
         JScrollPane scrollPane = new JScrollPane(itemsPanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
-        
+
         // Panneau pour les objets et les boutons
         JPanel southPanel = new JPanel(new BorderLayout());
         southPanel.setOpaque(false);
         southPanel.add(scrollPane, BorderLayout.CENTER);
-        
+
         // Bouton de fermeture
         JButton fermerButton = createStyledButton("Retour au combat");
         fermerButton.addActionListener(e -> inventaireDialog.dispose());
-        
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         buttonPanel.add(fermerButton);
         southPanel.add(buttonPanel, BorderLayout.SOUTH);
-        
+
         mainPanel.add(southPanel, BorderLayout.SOUTH);
-        
+
         inventaireDialog.setContentPane(mainPanel);
         inventaireDialog.setVisible(true);
-        
+
         return itemUsed[0];
     }
-    
+
     /**
      * Crée un bouton d'objet d'inventaire avec description pour le combat
      */
@@ -721,32 +745,32 @@ public class SamuraiSwingUI extends JFrame {
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         String icon = Personnage.getItemIcon(item);
         String effet = getItemEffectDescription(item);
-        
+
         JLabel iconLabel = new JLabel(icon + " " + item);
         iconLabel.setForeground(TEXT_COLOR);
         iconLabel.setFont(new Font("Yu Mincho", Font.BOLD, 16));
-        
+
         JLabel effectLabel = new JLabel(effet);
         effectLabel.setForeground(ACCENT_COLOR);
         effectLabel.setFont(new Font("Yu Mincho", Font.ITALIC, 14));
-        
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(iconLabel);
         panel.add(effectLabel);
         panel.setBackground(new Color(40, 30, 20));
         panel.setBorder(BorderFactory.createLineBorder(ACCENT_COLOR, 1));
-        
+
         button.add(panel, BorderLayout.CENTER);
         button.setPreferredSize(new Dimension(400, 60));
         button.setMaximumSize(new Dimension(400, 60));
-        
+
         return button;
     }
-    
+
     /**
      * Renvoie la description de l'effet d'un objet au combat
      */
@@ -766,21 +790,22 @@ public class SamuraiSwingUI extends JFrame {
         }
         return "Utilisable au combat";
     }
-    
+
     /**
      * Utilise un objet pendant le combat et applique ses effets
+     * 
      * @return true si l'objet a été utilisé
      */
     private boolean utiliserObjet(String item, Personnage personnage, Enemy enemy) {
         boolean consommable = true;
         String message = "";
-        
+
         if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")) {
             // Restaure de l'endurance et donne un bonus d'habileté temporaire
             personnage.modifierStatistique("ENDURANCE", 2);
             personnage.modifierStatistique("HABILETÉ", 1);
             message = "Vous consommez votre nourriture de voyage. Vous regagnez 2 points d'ENDURANCE et " +
-                     "obtenez +1 en HABILETÉ pour ce combat!";
+                    "obtenez +1 en HABILETÉ pour ce combat!";
         } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")) {
             // Restaure plus d'endurance
             personnage.modifierStatistique("ENDURANCE", 4);
@@ -797,7 +822,8 @@ public class SamuraiSwingUI extends JFrame {
         } else if (item.contains("Armure")) {
             // Les armures ne sont pas consommées
             personnage.modifierStatistique("ENDURANCE", 1);
-            message = "Vous ajustez votre " + item + " pour une meilleure protection. Réduit les dégâts reçus de 1 point!";
+            message = "Vous ajustez votre " + item
+                    + " pour une meilleure protection. Réduit les dégâts reçus de 1 point!";
             consommable = false;
         } else if (item.contains("Amulette") || item.contains("Talisman")) {
             // Les amulettes ne sont pas consommées
@@ -806,20 +832,20 @@ public class SamuraiSwingUI extends JFrame {
             consommable = false;
         } else {
             // Objet inconnu
-            JOptionPane.showMessageDialog(this, 
+            JOptionPane.showMessageDialog(this,
                     "Vous ne pouvez pas utiliser cet objet au combat.",
                     "Objet inutilisable", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
-        
+
         // Afficher le message d'utilisation
         JOptionPane.showMessageDialog(this, message, "Utilisation d'objet", JOptionPane.INFORMATION_MESSAGE);
-        
+
         // Supprimer l'objet s'il est consommable
         if (consommable) {
             personnage.retirerInventaire(item);
         }
-        
+
         return true;
     }
 }

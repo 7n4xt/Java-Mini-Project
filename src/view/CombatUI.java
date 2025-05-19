@@ -120,12 +120,15 @@ public class CombatUI extends JDialog implements ActionListener {
         combatLog.setEditable(false);
         combatLog.setFont(TEXT_FONT);
         combatLog.setForeground(TEXT_COLOR);
-        combatLog.setBackground(new Color(30, 30, 30));
+        combatLog.setBackground(new Color(10, 10, 10, 240)); // Plus sombre pour un meilleur contraste
         combatLog.setLineWrap(true);
         combatLog.setWrapStyleWord(true);
         combatLog.setBorder(BorderFactory.createLineBorder(ACCENT_COLOR, 1));
+        combatLog.setMargin(new Insets(15, 15, 15, 15)); // Marge augmentée pour éviter que le texte touche les bords
+        combatLog.setOpaque(true); // Rendre opaque pour un meilleur rendu
         combatLog.setText(
-                "Vous affrontez " + ennemi.getNom() + ".\n" + ennemi.getDescription() + "\n\nQue voulez-vous faire ?");
+                "Vous affrontez " + ennemi.getNom() + ".\n\n" + ennemi.getDescription()
+                        + "\n\nQue voulez-vous faire ?");
 
         JScrollPane scrollPane = new JScrollPane(combatLog);
         scrollPane.setBorder(null);
@@ -187,7 +190,8 @@ public class CombatUI extends JDialog implements ActionListener {
     private void setupCombatActions() {
         // Si l'ennemi est un ninja, ajouter un message spécial
         if (ennemi.getNom().toLowerCase().contains("ninja")) {
-            appendToCombatLog("\n<html><b><font color='red'>Cet adversaire est un ninja! Vos attaques feront plus de dégâts.</font></b></html>");
+            appendToCombatLog(
+                    "\n<html><b><font color='red'>Cet adversaire est un ninja! Vos attaques feront plus de dégâts.</font></b></html>");
         }
     }
 
@@ -195,21 +199,22 @@ public class CombatUI extends JDialog implements ActionListener {
      * Applique des bonus pour les combats du chapitre 2
      */
     private void initCombatWithChapter2Bonuses() {
-        // Vérifier si nous sommes au chapitre 2 en regardant le titre de la fenêtre parente
+        // Vérifier si nous sommes au chapitre 2 en regardant le titre de la fenêtre
+        // parente
         boolean isChapter2 = getTitle().contains("Chapitre 2");
-        
+
         if (isChapter2) {
             // Donner un avantage au joueur pour le chapitre 2
             int bonusEndurance = 5;
             int bonusHabilete = 2;
-            
+
             joueur.modifierStatistique("vie", bonusEndurance);
             joueur.modifierStatistique("habileté", bonusHabilete);
-            
+
             // Mettre à jour les barres de vie avec les nouvelles valeurs
             vieJoueur.setMaximum(joueur.getStatistique("vie"));
             vieJoueur.setValue(joueur.getStatistique("vie"));
-            
+
             // Afficher un message spécial
             appendToCombatLog("Votre expérience du chapitre précédent vous donne un avantage au combat! " +
                     "+" + bonusEndurance + " ENDURANCE, +" + bonusHabilete + " HABILETÉ");
@@ -238,20 +243,20 @@ public class CombatUI extends JDialog implements ActionListener {
             int dégâtsBase = 2; // Dégâts standards
             int dégâtsBonus = 1; // Dégâts bonus supplémentaires
             int dégâtsTotal = dégâtsBase + dégâtsBonus;
-            
+
             // Infligez les dégâts (ils seront amplifiés dans l'objet Enemy)
             ennemi.infligerDégâts(dégâtsTotal);
 
-            appendToCombatLog("Vous avez touché " + ennemi.getNom() + " avec précision et infligé " + dégâtsTotal + 
-                " points de dégâts de base !");
+            appendToCombatLog("Vous avez touché " + ennemi.getNom() + " avec précision et infligé " + dégâtsTotal +
+                    " points de dégâts de base !");
             vieEnnemi.setValue(ennemi.getEndurance());
-            
+
             // Bonus de dégâts aléatoire (25% de chance)
             if (Math.random() < 0.25) {
                 int dégâtsCritiques = 2;
                 ennemi.infligerDégâts(dégâtsCritiques);
-                appendToCombatLog("COUP CRITIQUE! Vous portez un coup supplémentaire et infligez " + 
-                    dégâtsCritiques + " points de dégâts supplémentaires!");
+                appendToCombatLog("COUP CRITIQUE! Vous portez un coup supplémentaire et infligez " +
+                        dégâtsCritiques + " points de dégâts supplémentaires!");
                 vieEnnemi.setValue(ennemi.getEndurance());
             }
         } else if (forceAttaqueEnnemi > forceAttaqueJoueur) {
@@ -262,7 +267,8 @@ public class CombatUI extends JDialog implements ActionListener {
             appendToCombatLog(ennemi.getNom() + " vous a touché et vous a infligé " + dégâts + " points de dégâts !");
             vieJoueur.setValue(joueur.getStatistique("vie"));
         } else {
-            // Égalité, les deux esquivent mais il y a une chance que le joueur prenne quand même des dégâts
+            // Égalité, les deux esquivent mais il y a une chance que le joueur prenne quand
+            // même des dégâts
             int chanceDegatAleatoire = (int) (Math.random() * 100); // 0-99
 
             if (chanceDegatAleatoire < 30) { // 30% de chance de prendre des dégâts même en esquivant
@@ -274,13 +280,13 @@ public class CombatUI extends JDialog implements ActionListener {
                 vieJoueur.setValue(joueur.getStatistique("vie"));
             } else {
                 appendToCombatLog("Vous avez tous les deux esquivé les attaques !");
-                
+
                 // Quand les deux esquivent, le joueur a une chance de contre-attaquer (40%)
                 if (Math.random() < 0.4) {
                     int dégâtsContre = 1;
                     ennemi.infligerDégâts(dégâtsContre);
-                    appendToCombatLog("Vous profitez du moment pour effectuer une contre-attaque rapide! " + 
-                        "Vous infligez " + dégâtsContre + " point de dégâts!");
+                    appendToCombatLog("Vous profitez du moment pour effectuer une contre-attaque rapide! " +
+                            "Vous infligez " + dégâtsContre + " point de dégâts!");
                     vieEnnemi.setValue(ennemi.getEndurance());
                 }
             }
@@ -300,7 +306,7 @@ public class CombatUI extends JDialog implements ActionListener {
         // Réactiver les boutons après un court délai
         Timer timer = new Timer(800, evt -> {
             setButtonsEnabled(true);
-            
+
             // Vérifier si l'ennemi est vaincu après l'attaque
             if (ennemi.estVaincu()) {
                 combatTerminé = true;
@@ -350,13 +356,13 @@ public class CombatUI extends JDialog implements ActionListener {
                 vieJoueur.setValue(joueur.getStatistique("vie"));
             } else {
                 appendToCombatLog("Vous avez parfaitement paré l'attaque de " + ennemi.getNom() + " !");
-                
+
                 // Riposte quand défense réussie (60% de chance)
                 if (Math.random() < 0.6) {
                     int dégâtsRiposte = 2;
                     ennemi.infligerDégâts(dégâtsRiposte);
-                    appendToCombatLog("Après avoir paré, vous ripostez immédiatement! Vous infligez " + 
-                        dégâtsRiposte + " points de dégâts!");
+                    appendToCombatLog("Après avoir paré, vous ripostez immédiatement! Vous infligez " +
+                            dégâtsRiposte + " points de dégâts!");
                     vieEnnemi.setValue(ennemi.getEndurance());
                 }
             }
@@ -368,7 +374,7 @@ public class CombatUI extends JDialog implements ActionListener {
         // Réactiver les boutons après un court délai
         Timer timer = new Timer(800, evt -> {
             setButtonsEnabled(true);
-            
+
             // Vérifier si l'ennemi est vaincu après la défense
             if (ennemi.estVaincu()) {
                 combatTerminé = true;
@@ -522,10 +528,30 @@ public class CombatUI extends JDialog implements ActionListener {
     }
 
     /**
-     * Ajoute du texte au log de combat
+     * Ajoute du texte au log de combat avec mise en forme améliorée
      */
     private void appendToCombatLog(String text) {
-        combatLog.append("\n" + text);
+        // Ajouter des espaces pour une meilleure lisibilité
+        if (combatLog.getText().trim().length() > 0) {
+            combatLog.append("\n\n• " + text);
+        } else {
+            combatLog.append("• " + text);
+        }
+
+        // Formater le texte pour mettre en évidence certaines informations
+        String content = combatLog.getText();
+
+        // Limiter la taille du log pour éviter les ralentissements
+        if (content.length() > 2000) {
+            content = content.substring(content.length() - 1500);
+            int firstNewLine = content.indexOf("\n");
+            if (firstNewLine > 0) {
+                content = content.substring(firstNewLine + 1);
+            }
+            combatLog.setText(content);
+        }
+
+        // Défiler automatiquement vers le bas
         combatLog.setCaretPosition(combatLog.getDocument().getLength());
     }
 
