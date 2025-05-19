@@ -391,7 +391,7 @@ public class SamuraiSwingUI extends JFrame {
                     !chapitre.getTitre().toLowerCase().contains("mort") &&
                     !chapitre.getTexte().toLowerCase().contains("mort");
 
-            // Vérifier si ce chapitre permet d'accéder au chapitre suivant
+            // Vérifier si ce chapitre permet d'accéder au chapitre suivant (dans ce cas chapitre 6)
             boolean hasNextChapter = chapitre.getId() == 6; // Si c'est la fin heureuse du chapitre 1
             int nextChapterId = hasNextChapter ? 2 : -1; // Chapitre 2
 
@@ -405,24 +405,64 @@ public class SamuraiSwingUI extends JFrame {
                                 ? "Voulez-vous continuer au chapitre suivant, recommencer, ou retourner au menu principal ?"
                                 : "Voulez-vous recommencer pour explorer d'autres chemins, ou retourner au menu principal ?");
 
-                // Afficher le dialogue de fin et attendre la réponse
-                EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory, hasNextChapter,
-                        nextChapterId);
-                boolean replay = endDialog.showDialogAndWaitForChoice();
-                boolean continueNext = endDialog.wantContinueToNextChapter();
+                try {
+                    // Afficher le dialogue de fin et attendre la réponse
+                    EndChapterDialog endDialog = new EndChapterDialog(this, title, message, isVictory, hasNextChapter,
+                            nextChapterId);
+                    boolean replay = endDialog.showDialogAndWaitForChoice();
+                    boolean continueNext = endDialog.wantContinueToNextChapter();
 
-                if (replay) {
-                    // Si le joueur veut rejouer
-                    gameController.demarrerPartie();
-                    afficherChapitre(gameController.getChapitreActuel());
-                } else if (continueNext && hasNextChapter) {
-                    // Si le joueur veut continuer au chapitre suivant
-                    Scenario nextChapterScenario = ScenarioLoader.creerScenarioChapitre2();
-                    gameController.changerScenario(nextChapterScenario);
-                    afficherChapitre(gameController.getChapitreActuel());
-                } else {
-                    // Si le joueur veut quitter
-                    retourMenu();
+                    System.out.println("DEBUG: Dialog result - replay: " + replay + ", continueNext: " + continueNext);
+
+                    if (replay) {
+                        // Si le joueur veut rejouer
+                        gameController.demarrerPartie();
+                        afficherChapitre(gameController.getChapitreActuel());
+                    } else if (continueNext && hasNextChapter) {
+                        // Si le joueur veut continuer au chapitre suivant
+                        System.out.println("DEBUG: Loading Chapter 2...");
+                        try {
+                            Scenario nextChapterScenario = controller.ScenarioLoader.creerScenarioChapitre2();
+                            if (nextChapterScenario != null) {
+                                System.out.println("DEBUG: Chapter 2 scenario loaded successfully");
+                                gameController.changerScenario(nextChapterScenario);
+                                System.out.println("DEBUG: Chapter changed, getting current chapter...");
+                                Chapitre nextChapitre = gameController.getChapitreActuel();
+                                if (nextChapitre != null) {
+                                    System.out.println("DEBUG: Current chapter is: " + nextChapitre.getTitre());
+                                    afficherChapitre(nextChapitre);
+                                } else {
+                                    System.err.println("ERROR: Failed to get chapter from controller!");
+                                    JOptionPane.showMessageDialog(this, 
+                                        "Erreur lors du chargement du chapitre suivant. Le chapitre est null.", 
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                                    // Fallback to main menu
+                                    retourMenu();
+                                }
+                            } else {
+                                System.err.println("ERROR: Failed to create Chapter 2 scenario!");
+                                JOptionPane.showMessageDialog(this, 
+                                    "Erreur lors du chargement du chapitre 2. Le scénario est null.", 
+                                    "Erreur", JOptionPane.ERROR_MESSAGE);
+                                // Fallback to main menu
+                                retourMenu();
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(this, 
+                                "Erreur lors du chargement du chapitre 2: " + ex.getMessage(), 
+                                "Erreur", JOptionPane.ERROR_MESSAGE);
+                            // Fallback to main menu
+                            retourMenu();
+                        }
+                    } else {
+                        // Si le joueur veut quitter
+                        retourMenu();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Erreur lors du traitement de la fin de chapitre: " + e.getMessage(),
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             });
 
@@ -433,7 +473,6 @@ public class SamuraiSwingUI extends JFrame {
                 afficherChapitre(gameController.getChapitreActuel());
             });
             choixPanel.add(recommencerButton);
-
         } else {
             // Sinon, on affiche les choix disponibles
             List<Choix> choixPossibles = chapitre.getChoixPossibles();

@@ -1,78 +1,87 @@
 package model;
 
 /**
- * Représente un ennemi que le joueur peut combattre
+ * Représente un ennemi dans le jeu
  */
 public class Enemy {
     private String nom;
-    private int habileté;
+    private int habilete;
     private int endurance;
+    private int enduranceMax;
     private String description;
 
     /**
-     * Constructeur d'ennemi
+     * Constructeur avec tous les paramètres
      * 
      * @param nom         Le nom de l'ennemi
-     * @param habileté    Points d'habileté de l'ennemi
-     * @param endurance   Points d'endurance de l'ennemi
-     * @param description Description de l'ennemi
+     * @param habilete    La valeur d'habileté de l'ennemi
+     * @param endurance   La valeur d'endurance de l'ennemi
+     * @param description La description de l'ennemi
      */
-    public Enemy(String nom, int habileté, int endurance, String description) {
+    public Enemy(String nom, int habilete, int endurance, String description) {
         this.nom = nom;
-        this.habileté = habileté;
+        this.habilete = habilete;
         this.endurance = endurance;
+        this.enduranceMax = endurance;
         this.description = description;
     }
 
     /**
-     * Calcule la force d'attaque de l'ennemi (habileté + 2d6)
+     * Constructeur sans description
      * 
-     * @return La force d'attaque
+     * @param nom         Le nom de l'ennemi
+     * @param habilete    La valeur d'habileté de l'ennemi
+     * @param endurance   La valeur d'endurance de l'ennemi
+     */
+    public Enemy(String nom, int habilete, int endurance) {
+        this(nom, habilete, endurance, "Un adversaire qui se dresse sur votre chemin.");
+    }
+
+    /**
+     * Calcule la force d'attaque de l'ennemi (habileté + dés)
+     * 
+     * @return La force d'attaque calculée
      */
     public int calculerForceAttaque() {
-        // Lancer 2 dés à 6 faces
-        int dé1 = (int) (Math.random() * 6) + 1;
-        int dé2 = (int) (Math.random() * 6) + 1;
-        return habileté + dé1 + dé2;
+        return habilete + (int) (Math.random() * 6) + 1 + (int) (Math.random() * 6) + 1;
     }
 
     /**
      * Inflige des dégâts à l'ennemi
      * 
-     * @param dégâts Nombre de points d'endurance à retirer
+     * @param degats Le nombre de points d'endurance à retirer
      */
-    public void infligerDégâts(int dégâts) {
-        this.endurance = Math.max(0, this.endurance - dégâts);
+    public void infligerDégâts(int degats) {
+        // Amplifier les dégâts reçus par l'ennemi (multiplicateur 2x)
+        int degatsAmplifies = degats * 2;
+        this.endurance = Math.max(0, this.endurance - degatsAmplifies);
+        System.out.println("L'ennemi subit " + degatsAmplifies + " points de dégâts! (Amplification x2)");
     }
 
     /**
-     * Vérifie si l'ennemi est vaincu (endurance à 0)
+     * Vérifie si l'ennemi est vaincu
      * 
-     * @return true si l'ennemi est vaincu
+     * @return true si l'endurance de l'ennemi est à 0
      */
     public boolean estVaincu() {
         return endurance <= 0;
     }
 
-    // Getters et setters
+    // Getters
     public String getNom() {
         return nom;
     }
 
-    public int getHabileté() {
-        return habileté;
-    }
-
-    public void setHabileté(int habileté) {
-        this.habileté = habileté;
+    public int getHabilete() {
+        return habilete;
     }
 
     public int getEndurance() {
         return endurance;
     }
 
-    public void setEndurance(int endurance) {
-        this.endurance = endurance;
+    public int getEnduranceMax() {
+        return enduranceMax;
     }
 
     public String getDescription() {

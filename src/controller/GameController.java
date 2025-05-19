@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import model.Combat;
 
 /**
  * Contrôleur principal du jeu, gère la progression de l'histoire et
@@ -145,7 +146,7 @@ public class GameController {
 
         Choix choixSelectionne = chapitreActuel.getChoixPossibles().get(indexChoix);
         int idChapitreSuivant = choixSelectionne.getChapitreDestinationId();
-        chapitreActuel = scenario.getChapitre(idChapitreSuivant);
+        chapitreActuel = scenario.getChapitres().get(idChapitreSuivant);
 
         marquerChapitreVisite(chapitreActuel.getId());
         return chapitreActuel;
@@ -198,7 +199,7 @@ public class GameController {
                 int idChapitre = Integer.parseInt(lignes[1]);
 
                 this.personnage.setNom(nomPersonnage);
-                this.chapitreActuel = scenario.getChapitre(idChapitre);
+                this.chapitreActuel = scenario.getChapitres().get(idChapitre);
 
                 // Chargement des statistiques et de l'inventaire pourrait être ajouté ici
                 return true;
@@ -211,29 +212,187 @@ public class GameController {
     }
 
     /**
-     * Obtient le chapitre de défaite correspondant au chapitre actuel
-     * 
-     * @param idChapitre ID du chapitre actuel
-     * @return Le chapitre de défaite ou null si non défini
+     * Change le scénario courant (pour passer au chapitre suivant)
+     * @param nouveauScenario Le nouveau scénario à utiliser
      */
-    public Chapitre getChapitreDefaite(int idChapitre) {
-        Integer idChapitreDefaite = chapitresDefaite.get(idChapitre);
-        if (idChapitreDefaite != null) {
-            return scenario.getChapitre(idChapitreDefaite);
+    public void changerScenario(Scenario nouveauScenario) {
+        if (nouveauScenario == null) {
+            System.err.println("ERREUR: Tentative de changer vers un scénario null");
+            return;
         }
+        
+        System.out.println("DEBUG: Changing scenario to: " + nouveauScenario.getTitre());
+        
+        try {
+            // Sauvegarder le personnage actuel et ses statistiques
+            Personnage personnageActuel = this.personnage;
+            
+            // Changer de scénario
+            this.scenario = nouveauScenario;
+            
+            // Réutiliser le même personnage avec ses statistiques
+            this.personnage = personnageActuel;
+            
+            // Réinitialiser les chapitres visités pour ce nouveau scénario
+            if (chapitresVisites == null) {
+                chapitresVisites = new HashMap<>();
+            } else {
+                chapitresVisites.clear();
+            }
+            
+            // Démarrer au premier chapitre du nouveau scénario
+            Map<Integer, Chapitre> chapitres = scenario.getChapitres();
+            if (chapitres != null && !chapitres.isEmpty()) {
+                chapitreActuel = chapitres.get(1); // Le premier chapitre a l'id 1
+                if (chapitreActuel == null) {
+                    // Si l'id 1 n'existe pas, prendre le premier chapitre disponible
+                    chapitreActuel = chapitres.values().iterator().next();
+                }
+                System.out.println("DEBUG: New starting chapter is: " + chapitreActuel.getTitre());
+            } else {
+                System.err.println("ERREUR: Le scénario n'a pas de chapitres ou la Map est null!");
+            }
+        } catch (Exception e) {
+            System.err.println("ERREUR lors du changement de scénario: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Obtient le chapitre de défaite pour un id de chapitre donné
+     * @param chapitreId L'id du chapitre
+     * @return Le chapitre de défaite ou null si non trouvé
+     */
+    public Chapitre getChapitreDefaite(int chapitreId) {
+        // Trouver le chapitre actuel
+        Chapitre chapitre = scenario.getChapitreById(chapitreId);
+        
+        if (chapitre != null && chapitre.hasChapitreDefaite()) {
+            return chapitre.getChapitreDefaite();
+        }
+        
         return null;
     }
 
     /**
-     * Change le scénario actuel
-     * 
-     * @param newScenario Le nouveau scénario à utiliser
+     * Exécute un tour de combat
+     * @param combat Le combat en cours
+     * @param action L'action du joueur ("attaquer" ou "defendre")
+     * @return true si le joueur a gagné le combat, false sinon
      */
-    public void changerScenario(Scenario newScenario) {
-        this.scenario = newScenario;
-        this.chapitreActuel = scenario.getChapitreInitial();
-        this.chapitresVisites.clear();
-        marquerChapitreVisite(chapitreActuel.getId());
+    public boolean executerCombat(Combat combat, String action) {
+        Personnage joueur = getPersonnage();
+        
+        // Déterminer les modificateurs en fonction de l'action
+        int modJoueur = 0;
+        int modEnnemi = 0;
+        
+        // Bonus pour le Chapitre 2 - facilité les combats
+        boolean estChapitre2 = scenario.getTitre().contains("Chapitre 2");
+        if (estChapitre2) {
+            modJoueur += 2;  // +2 en bonus d'attaque général dans le chapitre 2
+            modEnnemi -= 1;  // -1 en malus pour tous les ennemis du chapitre 2
+        }
+        
+        if ("defendre".equalsIgnoreCase(action)) {
+            modJoueur = -1; // Malus d'attaque quand on se défend
+            modEnnemi = -2; // Mais l'ennemi a un plus gros malus
+        }
+        
+        // Calculer les scores de combat
+        int scoreJoueur = lancerDes() + joueur.getStatistique("HABILETÉ") + modJoueur;
+        int scoreEnnemi = lancerDes() + combat.getEnnemiHabilete() + modEnnemi;
+        
+        // Avantage supplémentaire au chapitre 2
+        if (estChapitre2 && scoreJoueur < scoreEnnemi && Math.random() < 0.3) {
+            // 30% de chance d'inverser un échec en succès dans le chapitre 2
+            System.out.println("Votre expérience de combat vous permet d'esquiver à la dernière seconde!");
+            int temp = scoreJoueur;
+            scoreJoueur = scoreEnnemi;
+            scoreEnnemi = temp;
+        }
+        
+        // Déterminer les dégâts
+        int degatsJoueur = 0;
+        int degatsEnnemi = 0;
+        
+        if (scoreJoueur > scoreEnnemi) {
+            // Le joueur touche l'ennemi
+            degatsEnnemi = 4; // Augmenté de 2 à 4
+            
+            // Bonus de dégâts au chapitre 2
+            if (estChapitre2) {
+                degatsEnnemi += 2; // Augmenté de 1 à 2
+            }
+            
+            if ("attaquer".equalsIgnoreCase(action)) {
+                // Bonus de dégâts en attaquant
+                degatsEnnemi += 2; // Augmenté de 1 à 2
+            }
+            
+            // Dégâts critiques (25% de chance)
+            if (Math.random() < 0.25) {
+                degatsEnnemi += 2;
+                System.out.println("COUP CRITIQUE! +" + 2 + " points de dégâts!");
+            }
+            
+            combat.setEnnemiEndurance(combat.getEnnemiEndurance() - degatsEnnemi);
+            System.out.println("Le joueur inflige " + degatsEnnemi + " points de dégâts!");
+        } else if (scoreEnnemi > scoreJoueur) {
+            // L'ennemi touche le joueur
+            degatsJoueur = 2;
+            
+            // Réduction des dégâts au chapitre 2
+            if (estChapitre2) {
+                degatsJoueur = Math.max(1, degatsJoueur - 1);
+            }
+            
+            if ("attaquer".equalsIgnoreCase(action)) {
+                // Malus en défense quand on attaque
+                degatsJoueur += 1;
+            }
+            joueur.modifierStatistique("ENDURANCE", -degatsJoueur);
+        }
+        
+        // Vérifier si le combat est terminé
+        if (combat.getEnnemiEndurance() <= 0) {
+            // Le joueur a gagné
+            return true;
+        } else if (joueur.getStatistique("ENDURANCE") <= 0) {
+            // Le joueur a perdu
+            return false;
+        }
+        
+        // Le combat continue
+        return false;
+    }
+    
+    /**
+     * Tente de fuir un combat
+     * @param combat Le combat dont on veut fuir
+     * @return true si la fuite est réussie, false sinon
+     */
+    public boolean fuirCombat(Combat combat) {
+        boolean estChapitre2 = scenario.getTitre().contains("Chapitre 2");
+        int modificateurFuite = estChapitre2 ? -2 : 0;  // Plus facile de fuir au chapitre 2
+        
+        // 50% de chances de réussir à fuir (plus au chapitre 2)
+        if (lancerDes() + modificateurFuite >= 7) {
+            return true;
+        } else {
+            // En cas d'échec, le joueur subit des dégâts (réduits au chapitre 2)
+            int degats = estChapitre2 ? 0 : 1;  // Pas de dégâts en fuyant au chapitre 2
+            getPersonnage().modifierStatistique("ENDURANCE", -degats);
+            return false;
+        }
+    }
+    
+    /**
+     * Lance 2 dés à 6 faces et renvoie la somme
+     * @return un nombre entre 2 et 12
+     */
+    private int lancerDes() {
+        return (int)(Math.random() * 6) + 1 + (int)(Math.random() * 6) + 1;
     }
 
     // Getters

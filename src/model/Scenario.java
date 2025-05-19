@@ -26,17 +26,27 @@ public class Scenario {
     }
 
     /**
-     * Ajoute un chapitre au scénario
+     * Constructeur avec seulement le titre (pour compatibilité)
+     * @param titre Le titre du scénario
      */
-    public void ajouterChapitre(Chapitre chapitre) {
-        chapitres.put(chapitre.getId(), chapitre);
+    public Scenario(String titre) {
+        this(titre, "");
     }
 
     /**
-     * Récupère un chapitre par son identifiant
+     * Ajoute un chapitre au scénario
+     * @param chapitre Le chapitre à ajouter
      */
-    public Chapitre getChapitre(int id) {
-        return chapitres.get(id);
+    public void addChapitre(Chapitre chapitre) {
+        chapitres.put(chapitre.getId(), chapitre);
+    }
+    
+    /**
+     * Méthode alternative pour ajouter un chapitre (pour compatibilité)
+     * @param chapitre Le chapitre à ajouter
+     */
+    public void ajouterChapitre(Chapitre chapitre) {
+        chapitres.put(chapitre.getId(), chapitre);
     }
 
     /**
@@ -46,6 +56,32 @@ public class Scenario {
         return chapitres.get(chapitreInitialId);
     }
 
+    /**
+     * Récupère tous les chapitres du scénario
+     * @return Une map des chapitres avec leurs IDs comme clés
+     */
+    public Map<Integer, Chapitre> getChapitres() {
+        return chapitres;
+    }
+
+    /**
+     * Récupère un chapitre par son identifiant
+     * @param id L'identifiant du chapitre à récupérer
+     * @return Le chapitre correspondant ou null s'il n'existe pas
+     */
+    public Chapitre getChapitre(int id) {
+        return chapitres.get(id);
+    }
+
+    /**
+     * Récupère un chapitre par son identifiant
+     * @param id Identifiant du chapitre à récupérer
+     * @return Le chapitre demandé ou null s'il n'existe pas
+     */
+    public Chapitre getChapitreById(int id) {
+        return chapitres.get(id);
+    }
+
     // Getters et setters
     public String getTitre() {
         return titre;
@@ -53,10 +89,6 @@ public class Scenario {
 
     public String getDescription() {
         return description;
-    }
-
-    public Map<Integer, Chapitre> getChapitres() {
-        return chapitres;
     }
 
     public void setChapitreInitialId(int chapitreInitialId) {

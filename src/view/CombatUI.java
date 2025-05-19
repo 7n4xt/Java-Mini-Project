@@ -54,6 +54,7 @@ public class CombatUI extends JDialog implements ActionListener {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         initComponents();
+        setupCombatActions();
     }
 
     /**
@@ -148,6 +149,9 @@ public class CombatUI extends JDialog implements ActionListener {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
+
+        // Appeler la méthode de combat du chapitre 2 pour les avantages
+        initCombatWithChapter2Bonuses();
     }
 
     /**
@@ -177,27 +181,38 @@ public class CombatUI extends JDialog implements ActionListener {
         return button;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == attaquerButton) {
-            attaquer();
-        } else if (e.getSource() == défendreButton) {
-            défendre();
-        } else if (e.getSource() == inventaireButton) {
-            ouvrirInventaire();
-        } else if (e.getSource() == fuirButton) {
-            fuir();
+    /**
+     * Initialise les actions de combat
+     */
+    private void setupCombatActions() {
+        // Si l'ennemi est un ninja, ajouter un message spécial
+        if (ennemi.getNom().toLowerCase().contains("ninja")) {
+            appendToCombatLog("\n<html><b><font color='red'>Cet adversaire est un ninja! Vos attaques feront plus de dégâts.</font></b></html>");
         }
+    }
 
-        // Vérifier si le combat est terminé
-        if (ennemi.estVaincu()) {
-            combatTerminé = true;
-            victoire = true;
-            finCombat("Vous avez vaincu " + ennemi.getNom() + " !");
-        } else if (joueur.getStatistique("vie") <= 0) {
-            combatTerminé = true;
-            victoire = false;
-            finCombat("Vous avez été vaincu par " + ennemi.getNom() + "...");
+    /**
+     * Applique des bonus pour les combats du chapitre 2
+     */
+    private void initCombatWithChapter2Bonuses() {
+        // Vérifier si nous sommes au chapitre 2 en regardant le titre de la fenêtre parente
+        boolean isChapter2 = getTitle().contains("Chapitre 2");
+        
+        if (isChapter2) {
+            // Donner un avantage au joueur pour le chapitre 2
+            int bonusEndurance = 5;
+            int bonusHabilete = 2;
+            
+            joueur.modifierStatistique("vie", bonusEndurance);
+            joueur.modifierStatistique("habileté", bonusHabilete);
+            
+            // Mettre à jour les barres de vie avec les nouvelles valeurs
+            vieJoueur.setMaximum(joueur.getStatistique("vie"));
+            vieJoueur.setValue(joueur.getStatistique("vie"));
+            
+            // Afficher un message spécial
+            appendToCombatLog("Votre expérience du chapitre précédent vous donne un avantage au combat! " +
+                    "+" + bonusEndurance + " ENDURANCE, +" + bonusHabilete + " HABILETÉ");
         }
     }
 
@@ -220,11 +235,25 @@ public class CombatUI extends JDialog implements ActionListener {
 
         if (forceAttaqueJoueur > forceAttaqueEnnemi) {
             // Le joueur blesse l'ennemi
-            int dégâts = 2; // Dégâts standards
-            ennemi.infligerDégâts(dégâts);
+            int dégâtsBase = 2; // Dégâts standards
+            int dégâtsBonus = 1; // Dégâts bonus supplémentaires
+            int dégâtsTotal = dégâtsBase + dégâtsBonus;
+            
+            // Infligez les dégâts (ils seront amplifiés dans l'objet Enemy)
+            ennemi.infligerDégâts(dégâtsTotal);
 
-            appendToCombatLog("Vous avez touché " + ennemi.getNom() + " et infligé " + dégâts + " points de dégâts !");
+            appendToCombatLog("Vous avez touché " + ennemi.getNom() + " avec précision et infligé " + dégâtsTotal + 
+                " points de dégâts de base !");
             vieEnnemi.setValue(ennemi.getEndurance());
+            
+            // Bonus de dégâts aléatoire (25% de chance)
+            if (Math.random() < 0.25) {
+                int dégâtsCritiques = 2;
+                ennemi.infligerDégâts(dégâtsCritiques);
+                appendToCombatLog("COUP CRITIQUE! Vous portez un coup supplémentaire et infligez " + 
+                    dégâtsCritiques + " points de dégâts supplémentaires!");
+                vieEnnemi.setValue(ennemi.getEndurance());
+            }
         } else if (forceAttaqueEnnemi > forceAttaqueJoueur) {
             // L'ennemi blesse le joueur
             int dégâts = 2; // Dégâts standards
@@ -233,8 +262,7 @@ public class CombatUI extends JDialog implements ActionListener {
             appendToCombatLog(ennemi.getNom() + " vous a touché et vous a infligé " + dégâts + " points de dégâts !");
             vieJoueur.setValue(joueur.getStatistique("vie"));
         } else {
-            // Égalité, les deux esquivent mais il y a une chance que le joueur prenne quand
-            // même des dégâts
+            // Égalité, les deux esquivent mais il y a une chance que le joueur prenne quand même des dégâts
             int chanceDegatAleatoire = (int) (Math.random() * 100); // 0-99
 
             if (chanceDegatAleatoire < 30) { // 30% de chance de prendre des dégâts même en esquivant
@@ -246,14 +274,40 @@ public class CombatUI extends JDialog implements ActionListener {
                 vieJoueur.setValue(joueur.getStatistique("vie"));
             } else {
                 appendToCombatLog("Vous avez tous les deux esquivé les attaques !");
+                
+                // Quand les deux esquivent, le joueur a une chance de contre-attaquer (40%)
+                if (Math.random() < 0.4) {
+                    int dégâtsContre = 1;
+                    ennemi.infligerDégâts(dégâtsContre);
+                    appendToCombatLog("Vous profitez du moment pour effectuer une contre-attaque rapide! " + 
+                        "Vous infligez " + dégâtsContre + " point de dégâts!");
+                    vieEnnemi.setValue(ennemi.getEndurance());
+                }
             }
+        }
+
+        // Bonus de dégâts contre les ninjas
+        if (ennemi.getNom().toLowerCase().contains("ninja")) {
+            int bonusDamage = 2;
+            ennemi.infligerDégâts(bonusDamage);
+            appendToCombatLog("Vous exploitez la faiblesse du ninja! +2 dégâts bonus!");
+            vieEnnemi.setValue(ennemi.getEndurance());
         }
 
         // Réduire la stamina du joueur
         réduireStamina(15);
 
         // Réactiver les boutons après un court délai
-        Timer timer = new Timer(800, evt -> setButtonsEnabled(true));
+        Timer timer = new Timer(800, evt -> {
+            setButtonsEnabled(true);
+            
+            // Vérifier si l'ennemi est vaincu après l'attaque
+            if (ennemi.estVaincu()) {
+                combatTerminé = true;
+                victoire = true;
+                finCombat("Vous avez vaincu " + ennemi.getNom() + " !");
+            }
+        });
         timer.setRepeats(false);
         timer.start();
     }
@@ -296,6 +350,15 @@ public class CombatUI extends JDialog implements ActionListener {
                 vieJoueur.setValue(joueur.getStatistique("vie"));
             } else {
                 appendToCombatLog("Vous avez parfaitement paré l'attaque de " + ennemi.getNom() + " !");
+                
+                // Riposte quand défense réussie (60% de chance)
+                if (Math.random() < 0.6) {
+                    int dégâtsRiposte = 2;
+                    ennemi.infligerDégâts(dégâtsRiposte);
+                    appendToCombatLog("Après avoir paré, vous ripostez immédiatement! Vous infligez " + 
+                        dégâtsRiposte + " points de dégâts!");
+                    vieEnnemi.setValue(ennemi.getEndurance());
+                }
             }
         }
 
@@ -303,7 +366,16 @@ public class CombatUI extends JDialog implements ActionListener {
         réduireStamina(5);
 
         // Réactiver les boutons après un court délai
-        Timer timer = new Timer(800, evt -> setButtonsEnabled(true));
+        Timer timer = new Timer(800, evt -> {
+            setButtonsEnabled(true);
+            
+            // Vérifier si l'ennemi est vaincu après la défense
+            if (ennemi.estVaincu()) {
+                combatTerminé = true;
+                victoire = true;
+                finCombat("Vous avez vaincu " + ennemi.getNom() + " !");
+            }
+        });
         timer.setRepeats(false);
         timer.start();
     }
@@ -501,5 +573,22 @@ public class CombatUI extends JDialog implements ActionListener {
             Thread.currentThread().interrupt();
         }
         return victoire;
+    }
+
+    /**
+     * Implémentation de l'actionPerformed pour gérer les actions des boutons
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == attaquerButton) {
+            attaquer();
+        } else if (source == défendreButton) {
+            défendre();
+        } else if (source == inventaireButton) {
+            ouvrirInventaire();
+        } else if (source == fuirButton) {
+            fuir();
+        }
     }
 }

@@ -13,11 +13,11 @@ public class Choix {
      * Constructeur de Choix
      * 
      * @param texte                 Le texte décrivant le choix
-     * @param chapitreDestinationId L'identifiant du chapitre de destination
+     * @param chapitre2 L'identifiant du chapitre de destination
      */
-    public Choix(String texte, int chapitreDestinationId) {
+    public Choix(String texte, Chapitre chapitre2) {
         this.texte = texte;
-        this.chapitreDestinationId = chapitreDestinationId;
+        this.chapitreDestinationId = chapitre2.getId();
         this.declencheCombat = false;
     }
 
