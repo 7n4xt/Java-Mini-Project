@@ -15,16 +15,27 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Lancement de L'Épée du Samouraï...");
 
+        // Appliquer les optimisations de rendu de texte globales
+        try {
+            // Importer la classe TextRenderingFixer
+            Class.forName("view.TextRenderingFixer");
+            // Appliquer les paramètres globaux de rendu de texte
+            view.TextRenderingFixer.applyGlobalTextSettings();
+            System.out.println("Optimisations de rendu de texte appliquées");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'application des optimisations de rendu: " + e.getMessage());
+        }
+
         // Précharger les scénarios pour de meilleures performances
         preloadScenarios();
-        
+
         // Lancer directement l'interface graphique avec le menu principal
         SwingUtilities.invokeLater(() -> {
             MenuUI menuUI = new MenuUI();
             menuUI.setVisible(true);
         });
     }
-    
+
     /**
      * Précharge les scénarios en arrière-plan pour réduire les temps de chargement
      */
@@ -33,7 +44,7 @@ public class Main {
             try {
                 // Précharger les scénarios dans un thread séparé
                 System.out.println("Préchargement des chapitres...");
-                
+
                 // Charger le scénario de démonstration
                 try {
                     ScenarioLoader.creerScenarioDemonstration();
@@ -41,7 +52,7 @@ public class Main {
                 } catch (Exception e) {
                     System.err.println("Erreur lors du préchargement du scénario de démonstration: " + e.getMessage());
                 }
-                
+
                 // Charger le scénario du chapitre 2
                 try {
                     ScenarioLoader.creerScenarioChapitre2();
@@ -50,7 +61,7 @@ public class Main {
                     System.err.println("Erreur lors du préchargement du scénario du chapitre 2: " + e.getMessage());
                     e.printStackTrace();
                 }
-                
+
                 System.out.println("Préchargement terminé.");
             } catch (Exception e) {
                 System.err.println("Erreur générale lors du préchargement des scénarios: " + e.getMessage());
