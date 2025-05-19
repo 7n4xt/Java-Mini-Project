@@ -381,6 +381,22 @@ public class SamuraiSwingUI extends JFrame {
 
         // Mise à jour des choix
         choixPanel.removeAll();
+        
+        // Vérifier si c'est la fin du chapitre 2
+        boolean isEndOfChapter2 = chapitre.getId() == 17 && 
+                                  gameController.getScenario().getTitre().contains("Chapitre 2");
+        
+        if (isEndOfChapter2) {
+            // Afficher un message de remerciement après la victoire du chapitre 2
+            SwingUtilities.invokeLater(() -> {
+                JOptionPane.showMessageDialog(this, 
+                    "Merci d'avoir joué à L'Épée du Samouraï !\n\n" +
+                    "Votre aventure continuera bientôt...\n" +
+                    "Les chapitres 3, 4 et 5 seront disponibles prochainement.\n\n" +
+                    "Restez à l'écoute pour la suite de cette épopée !",
+                    "Fin du Chapitre 2", JOptionPane.INFORMATION_MESSAGE);
+            });
+        }
 
         if (chapitre.estFin()) {
             // Si c'est un chapitre de fin, on détermine si c'est une victoire ou une

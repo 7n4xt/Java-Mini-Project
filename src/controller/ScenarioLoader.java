@@ -302,17 +302,17 @@ public class ScenarioLoader {
                     
                         // Chapitre 17 - Victoire et fin du chapitre 2
                         Chapitre chapitre17 = new Chapitre(17, "L'Héritage du Samouraï", 
-                                        "Après un combat éprouvant, vous parvenez à désarmer le Maître du Temple. Loin d'être mécontent, " +
-                                        "il sourit avec satisfaction.\n\n" +
-                                        "\"Vous avez prouvé votre valeur, non seulement par votre force mais par votre esprit. La Lame du Destin " +
-                                        "vous appartient désormais.\"\n\n" +
-                                        "Le vieil homme vous guide vers le piédestal. Lorsque vous tirez le katana de son fourreau, la lame " +
-                                        "brille d'un éclat surnaturel, comme si elle était forgée dans la lumière même.\n\n" +
-                                        "\"Cette lame est la seule capable de vaincre le seigneur de guerre Akuma. Mais rappelez-vous : " +
-                                        "le véritable pouvoir ne vient pas de l'arme, mais de celui qui la manie.\"\n\n" +
-                                        "Vous remerciez le maître pour sa sagesse et quittez le temple, la légendaire Lame du Destin à la ceinture. " +
-                                        "Votre quête n'est pas terminée – elle ne fait que commencer véritablement. Le seigneur de guerre Akuma " +
-                                        "vous attend...", true);
+                "Après un combat éprouvant, vous parvenez à désarmer le Maître du Temple. Loin d'être mécontent, " +
+                "il sourit avec satisfaction.\n\n" +
+                "\"Vous avez prouvé votre valeur, non seulement par votre force mais par votre esprit. La Lame du Destin " +
+                "vous appartient désormais.\"\n\n" +
+                "Le vieil homme vous guide vers le piédestal. Lorsque vous tirez le katana de son fourreau, la lame " +
+                "brille d'un éclat surnaturel, comme si elle était forgée dans la lumière même.\n\n" +
+                "\"Cette lame est la seule capable de vaincre le seigneur de guerre Akuma. Mais rappelez-vous : " +
+                "le véritable pouvoir ne vient pas de l'arme, mais de celui qui la manie.\"\n\n" +
+                "Vous remerciez le maître pour sa sagesse et quittez le temple, la légendaire Lame du Destin à la ceinture. " +
+                "Votre quête n'est pas terminée – elle ne fait que commencer véritablement...\n\n" +
+                "FÉLICITATIONS! Vous avez terminé le Chapitre 2!", true);
                 
                         // Chapitre 18 - Défaite face au maître
                         Chapitre chapitre18 = new Chapitre(18, "Leçon d'Humilité", 

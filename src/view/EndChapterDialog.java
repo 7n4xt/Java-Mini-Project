@@ -116,6 +116,35 @@ public class EndChapterDialog extends JDialog {
         
         // Ajouter le panneau principal à la boîte de dialogue
         setContentPane(mainPanel);
+        
+        // Vérifier si c'est la fin du chapitre 2
+        boolean isChapter2End = message.contains("FÉLICITATIONS! Vous avez terminé le Chapitre 2") || 
+                               message.contains("Chapitre 2!");
+        
+        // Si c'est la fin du chapitre 2, montrer un message spécial
+        if (isChapter2End) {
+            JLabel specialLabel = new JLabel("À VENIR : Les Chapitres 3, 4 et 5", JLabel.CENTER);
+            specialLabel.setFont(new Font("Yu Mincho", Font.BOLD, 20));
+            specialLabel.setForeground(new Color(255, 215, 0)); // Couleur or
+            
+            // Ajouter le label spécial au-dessus du message
+            JPanel specialPanel = new JPanel();
+            specialPanel.setOpaque(false);
+            specialPanel.add(specialLabel);
+            mainPanel.add(specialPanel, BorderLayout.NORTH);
+            
+            // Afficher un message après la fermeture du dialogue
+            this.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    JOptionPane.showMessageDialog(parent,
+                        "Merci d'avoir joué à L'Épée du Samouraï !\n\n" +
+                        "Les chapitres 3, 4 et 5 seront disponibles prochainement.\n" +
+                        "Restez à l'écoute pour découvrir la suite de cette aventure épique !",
+                        "Message des développeurs", JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
+        }
     }
     
     /**
