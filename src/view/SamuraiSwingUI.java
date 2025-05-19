@@ -1,7 +1,7 @@
 package view;
 
 import controller.GameController;
-import controller.ScenarioLoader; // Add this import
+import controller.ScenarioLoader;
 import model.Chapitre;
 import model.Choix;
 import model.Enemy;
@@ -401,20 +401,20 @@ public class SamuraiSwingUI extends JFrame {
 
         // Mise à jour des choix
         choixPanel.removeAll();
-        
+
         // Vérifier si c'est la fin du chapitre 2
-        boolean isEndOfChapter2 = chapitre.getId() == 17 && 
-                                  gameController.getScenario().getTitre().contains("Chapitre 2");
-        
+        boolean isEndOfChapter2 = chapitre.getId() == 17 &&
+                gameController.getScenario().getTitre().contains("Chapitre 2");
+
         if (isEndOfChapter2) {
             // Afficher un message de remerciement après la victoire du chapitre 2
             SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(this, 
-                    "Merci d'avoir joué à L'Épée du Samouraï !\n\n" +
-                    "Votre aventure continuera bientôt...\n" +
-                    "Les chapitres 3, 4 et 5 seront disponibles prochainement.\n\n" +
-                    "Restez à l'écoute pour la suite de cette épopée !",
-                    "Fin du Chapitre 2", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Merci d'avoir joué à L'Épée du Samouraï !\n\n" +
+                                "Votre aventure continuera bientôt...\n" +
+                                "Les chapitres 3, 4 et 5 seront disponibles prochainement.\n\n" +
+                                "Restez à l'écoute pour la suite de cette épopée !",
+                        "Fin du Chapitre 2", JOptionPane.INFORMATION_MESSAGE);
             });
         }
 
@@ -531,8 +531,9 @@ public class SamuraiSwingUI extends JFrame {
                 choixButton.addActionListener(e -> {
                     // Vérifier si ce choix déclenche un combat
                     if (chapitre.hasEnemy() && choix.declencheCombat()) {
-                        // Lancer le combat
-                        CombatUI combatUI = new CombatUI(this, gameController.getPersonnage(), chapitre.getEnemy());
+                        // Lancer le combat avec l'interface améliorée
+                        EnhancedCombatUI combatUI = new EnhancedCombatUI(this, gameController.getPersonnage(),
+                                chapitre.getEnemy());
                         boolean victoire = combatUI.commencerCombat();
 
                         if (victoire) {
@@ -677,7 +678,9 @@ public class SamuraiSwingUI extends JFrame {
         // Description
         JTextArea descArea = new JTextArea(
                 "Sélectionnez un objet à utiliser pour obtenir un avantage au combat.\n" +
-                        "La nourriture de voyage peut restaurer votre endurance et augmenter temporairement votre force.");
+                        "La gestion de votre endurance est cruciale: les attaques coûtent 3 points et la défense 1 point d'endurance.\n"
+                        +
+                        "Les potions et rations peuvent restaurer votre endurance pour continuer le combat efficacement.");
         descArea.setEditable(false);
         descArea.setWrapStyleWord(true);
         descArea.setLineWrap(true);
@@ -775,12 +778,14 @@ public class SamuraiSwingUI extends JFrame {
      * Renvoie la description de l'effet d'un objet au combat
      */
     private String getItemEffectDescription(String item) {
-        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")) {
-            return "Restaure 2 points d'ENDURANCE et donne +1 en HABILETÉ pour ce combat";
-        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")) {
-            return "Restaure 4 points d'ENDURANCE";
+        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")
+                || item.equalsIgnoreCase("Rations de voyage")) {
+            return "Restaure 6 points d'ENDURANCE et donne +1 en HABILETÉ pour ce combat";
+        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")
+                || item.equalsIgnoreCase("Potion de soin")) {
+            return "Restaure 8 points d'ENDURANCE";
         } else if (item.equalsIgnoreCase("Saké") || item.equalsIgnoreCase("Élixir")) {
-            return "+2 en HABILETÉ pour ce combat";
+            return "+2 en HABILETÉ pour ce combat et +3 en ENDURANCE";
         } else if (item.contains("Katana") || item.contains("Épée") || item.contains("Sabre")) {
             return "+1 en HABILETÉ pour ce combat";
         } else if (item.contains("Armure")) {
@@ -800,35 +805,46 @@ public class SamuraiSwingUI extends JFrame {
         boolean consommable = true;
         String message = "";
 
-        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")) {
+        if (item.equalsIgnoreCase("Nourriture de voyage") || item.equalsIgnoreCase("Provisions")
+                || item.equalsIgnoreCase("Rations de voyage")) {
             // Restaure de l'endurance et donne un bonus d'habileté temporaire
-            personnage.modifierStatistique("ENDURANCE", 2);
+            personnage.modifierStatistique("ENDURANCE", 6);
             personnage.modifierStatistique("HABILETÉ", 1);
-            message = "Vous consommez votre nourriture de voyage. Vous regagnez 2 points d'ENDURANCE et " +
+            message = "Vous consommez votre nourriture de voyage. Vous regagnez 6 points d'ENDURANCE et " +
                     "obtenez +1 en HABILETÉ pour ce combat!";
-        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")) {
+        } else if (item.equalsIgnoreCase("Potion de guérison") || item.equalsIgnoreCase("Herbes médicinales")
+                || item.equalsIgnoreCase("Potion de soin")) {
             // Restaure plus d'endurance
-            personnage.modifierStatistique("ENDURANCE", 4);
-            message = "Vous utilisez votre potion de guérison. Vous regagnez 4 points d'ENDURANCE!";
+            personnage.modifierStatistique("ENDURANCE", 8);
+            message = "Vous utilisez votre potion de guérison. Vous regagnez 8 points d'ENDURANCE!";
         } else if (item.equalsIgnoreCase("Saké") || item.equalsIgnoreCase("Élixir")) {
-            // Donne un bonus d'habileté temporaire plus important
+            // Donne un bonus d'habileté temporaire plus important et un peu d'endurance
             personnage.modifierStatistique("HABILETÉ", 2);
-            message = "Vous buvez votre " + item + ". Vous obtenez +2 en HABILETÉ pour ce combat!";
+            personnage.modifierStatistique("ENDURANCE", 3);
+            message = "Vous buvez votre " + item + ". Vous obtenez +2 en HABILETÉ et +3 en ENDURANCE pour ce combat!";
         } else if (item.contains("Katana") || item.contains("Épée") || item.contains("Sabre")) {
-            // Les armes ne sont pas consommées
-            personnage.modifierStatistique("HABILETÉ", 1);
-            message = "Vous utilisez votre " + item + " avec une technique spéciale. +1 en HABILETÉ pour ce combat!";
+            // Les armes ne sont pas consommées, mais le Katana de famille est spécial avec
+            // un bonus significatif
+            if (item.contains("Katana de famille")) {
+                personnage.modifierStatistique("HABILETÉ", 3);
+                message = "Vous utilisez votre Katana de famille avec une technique ancestrale. +3 en HABILETÉ pour ce combat!";
+            } else {
+                personnage.modifierStatistique("HABILETÉ", 1);
+                message = "Vous utilisez votre " + item
+                        + " avec une technique spéciale. +1 en HABILETÉ pour ce combat!";
+            }
             consommable = false;
         } else if (item.contains("Armure")) {
-            // Les armures ne sont pas consommées
-            personnage.modifierStatistique("ENDURANCE", 1);
+            // Les armures ne sont pas consommées et aident à restaurer l'endurance
+            personnage.modifierStatistique("ENDURANCE", 2);
             message = "Vous ajustez votre " + item
-                    + " pour une meilleure protection. Réduit les dégâts reçus de 1 point!";
+                    + " pour une meilleure protection. Vous gagnez 2 points d'ENDURANCE et réduisez les dégâts reçus!";
             consommable = false;
         } else if (item.contains("Amulette") || item.contains("Talisman")) {
-            // Les amulettes ne sont pas consommées
+            // Les amulettes ne sont pas consommées mais aident à la gestion d'endurance
             personnage.modifierStatistique("CHANCE", 2);
-            message = "Vous invoquez le pouvoir de votre " + item + ". +2 en CHANCE pour ce combat!";
+            personnage.modifierStatistique("ENDURANCE", 1);
+            message = "Vous invoquez le pouvoir de votre " + item + ". +2 en CHANCE et +1 en ENDURANCE pour ce combat!";
             consommable = false;
         } else {
             // Objet inconnu

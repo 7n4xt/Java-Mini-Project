@@ -44,16 +44,17 @@ public class Personnage {
         statistiques.put("agilité", 7);
         statistiques.put("sagesse", 6);
         statistiques.put("vie", 20);
+        statistiques.put("endurance", 15); // Nouvelle statistique d'endurance pour les actions de combat
 
-        // Ajouter des objets de départ à l'inventaire
+        // Ajouter uniquement les trois objets de départ spécifiés
         inventaire.add("Katana de famille");
-        inventaire.add("Armure légère");
         inventaire.add("Rations de voyage");
         inventaire.add("Potion de soin");
     }
 
     /**
      * Ajoute un objet à l'inventaire
+     * 
      * @param item Nom de l'objet à ajouter
      */
     public void ajouterInventaire(String item) {
@@ -64,6 +65,7 @@ public class Personnage {
 
     /**
      * Retire un objet de l'inventaire
+     * 
      * @param item L'objet à retirer
      * @return true si l'objet a été retiré, false s'il n'était pas présent
      */
@@ -89,7 +91,8 @@ public class Personnage {
 
     /**
      * Modifie la valeur d'une statistique
-     * @param nom Nom de la statistique
+     * 
+     * @param nom    Nom de la statistique
      * @param valeur Valeur à ajouter (peut être négative)
      */
     public void modifierStatistique(String nom, int valeur) {
@@ -115,6 +118,68 @@ public class Personnage {
      */
     public static String getItemIcon(String item) {
         return ITEM_ICONS.getOrDefault(item, "📦");
+    }
+
+    /**
+     * Réduit l'endurance du personnage lors d'une action
+     * 
+     * @param cout Le coût en endurance de l'action
+     * @return true si l'action est possible, false si pas assez d'endurance
+     */
+    public boolean utiliserEndurance(int cout) {
+        int enduranceActuelle = getStatistique("endurance");
+        if (enduranceActuelle >= cout) {
+            modifierStatistique("endurance", -cout);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Restaure de l'endurance au personnage
+     * 
+     * @param valeur La quantité d'endurance à restaurer
+     */
+    public void restaurerEndurance(int valeur) {
+        int enduranceMax = 15; // Valeur maximale d'endurance
+        int enduranceActuelle = getStatistique("endurance");
+        int nouvelleEndurance = Math.min(enduranceActuelle + valeur, enduranceMax);
+        statistiques.put("endurance", nouvelleEndurance);
+    }
+
+    /**
+     * Vérifie si le personnage possède un katana
+     * 
+     * @return true si le personnage a un katana dans son inventaire
+     */
+    public boolean possedeDualKatana() {
+        for (String item : inventaire) {
+            if (item.toLowerCase().contains("katana")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Récupère l'arme principale du personnage
+     * 
+     * @return Le nom de l'arme principale ou null si aucune arme
+     */
+    public String getArmePrincipale() {
+        // Priorité au katana de famille
+        if (inventaire.contains("Katana de famille")) {
+            return "Katana de famille";
+        }
+
+        // Puis autres armes
+        for (String item : inventaire) {
+            if (item.contains("Katana") || item.contains("Épée") || item.contains("Sabre")) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     // Getters et setters
