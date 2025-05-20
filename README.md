@@ -36,11 +36,6 @@ Le jeu "L'Épée du Samouraï" est une adaptation numérique d'un livre-jeu, dé
 - **Système de statistiques** (habileté, endurance, etc.)
 - **Sauvegarde/Chargement** de partie
 
-### 1.4 Captures d'écran
-
-![Carte des chapitres](examples/chapter_map.png)
-
-La carte des chapitres (ci-dessus) permet aux joueurs de visualiser leur progression. Le cercle rouge indique le chapitre actuel.
 
 ## 2. Présentation du jeu
 
@@ -135,7 +130,7 @@ Le développement de ce projet a été assisté par l'IA en utilisant les prompt
    implement a combat system based on the photo i gave you for the ui, in the first chapter there should be a ninja garden to defeat, when defeated the game continue otherwise the lose dialog shows hime that he was defeated by the ninja, also in the photo i gave you there is an inventory button, the user can use the items, and read the readme file make the game based on that
    ```
 
-![Capture d'écran d'interface](./src/Examples/Screenshot-From-2025-05-06-11-05-38.png)
+![Capture d'écran d'interface](https://github.com/7n4xt/Java-Mini-Project/blob/main/src/Examples/Untitled.pdf)
 
 ### 5.2 Approche de développement "Vibe Coding"
 
