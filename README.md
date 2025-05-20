@@ -37,6 +37,10 @@ Le jeu "L'Épée du Samouraï" est une adaptation numérique d'un livre-jeu, dé
 - **Sauvegarde/Chargement** de partie
 
 
+### 1.4 Design de l'interface
+
+[Interface graphique](https://github.com/7n4xt/Java-Mini-Project/blob/main/src/Examples/Interface-graphique-1.png)
+
 ## 2. Présentation du jeu
 
 ### 2.1 L'histoire
@@ -99,9 +103,9 @@ Assurez-vous d'avoir Java installé (JDK 21 recommandé).
 - **Affichage** : Résolution minimum de 1024x768
 - **Java Runtime Environment (JRE)** : Version 21 ou ultérieure
 
-## 5. Développement du projet
+## 4. Développement du projet
 
-### 5.1 Prompts utilisés pour le développement avec l'IA
+### 4.1 Prompts utilisés pour le développement avec l'IA
 
 Le développement de ce projet a été assisté par l'IA en utilisant les prompts suivants:
 
@@ -130,9 +134,7 @@ Le développement de ce projet a été assisté par l'IA en utilisant les prompt
    implement a combat system based on the photo i gave you for the ui, in the first chapter there should be a ninja garden to defeat, when defeated the game continue otherwise the lose dialog shows hime that he was defeated by the ninja, also in the photo i gave you there is an inventory button, the user can use the items, and read the readme file make the game based on that
    ```
 
-![Capture d'écran d'interface](https://github.com/7n4xt/Java-Mini-Project/blob/main/src/Examples/Untitled.pdf)
-
-### 5.2 Approche de développement "Vibe Coding"
+### 4.2 Approche de développement "Vibe Coding"
 
 Le projet a été développé en utilisant l'approche "vibe coding", qui consiste à:
 
@@ -143,11 +145,11 @@ Le projet a été développé en utilisant l'approche "vibe coding", qui consist
 
 Cette approche a permis de créer une interface cohérente avec l'univers du jeu et d'offrir une expérience utilisateur immersive dans l'esprit des jeux de samouraï comme Ghost of Tsushima.
 
-## 6. Comment continuer le développement du jeu
+## 5. Comment continuer le développement du jeu
 
 Ce jeu est actuellement en cours de développement avec certains chapitres non finalisés. Si vous souhaitez contribuer à son achèvement, cette section détaille la méthodologie à suivre pour intégrer harmonieusement votre contribution au projet existant.
 
-### 6.1 Structure narrative détaillée
+### 5.1 Structure narrative détaillée
 
 Le jeu "L'Épée du Samouraï" suit fidèlement la structure du livre-jeu original, avec une architecture narrative adaptée au format interactif :
 
@@ -168,7 +170,7 @@ Le jeu "L'Épée du Samouraï" suit fidèlement la structure du livre-jeu origin
    - Effets sonores appropriés aux situations (combats, découvertes)
    - Indicateurs visuels pour les statistiques du personnage
 
-### 6.2 Guide complet pour ajouter un nouveau chapitre
+### 5.2 Guide complet pour ajouter un nouveau chapitre
 
 Pour intégrer un nouveau chapitre au jeu, suivez ce processus détaillé :
 
@@ -223,7 +225,7 @@ public static Scenario creerScenarioChapitreX() {
         Enemy ennemi = new Enemy(
             "[Nom caractéristique]",          // Nom
             7,                                // Habileté (entre 5-12 selon difficulté)
-            10,                               // Endurance (entre 6-15 selon importance)
+            10,                               // Endurance (entre 5-15 selon importance)
             "[Description physique détaillée et comportement au combat]"  // Description
         );
         chapitre2.setEnemy(ennemi);
@@ -269,7 +271,7 @@ private static void preloadScenarios() {
 2. Placez-les dans `src/Assets/Photos/`
 3. Référencez-les dans l'interface utilisateur lors de l'affichage du chapitre
 
-### 6.3 Lier les chapitres existants avec précision
+### 5.3 Lier les chapitres existants avec précision
 
 Pour créer une progression narrative fluide entre les chapitres existants et nouveaux :
 
@@ -305,11 +307,11 @@ Pour créer une progression narrative fluide entre les chapitres existants et no
    }
    ```
 
-### 6.4 Enrichissement approfondi du gameplay
+### 5.4 Enrichissement approfondi du gameplay
 
 Pour améliorer l'expérience de jeu au-delà de la simple narration :
 
-#### 6.4.1 Système de combat avancé
+#### 5.4.1 Système de combat avancé
 Implémentez les techniques martiales mentionnées dans le livre :
 
 1. **Kyujutsu (Art de l'arc)** :
@@ -365,7 +367,7 @@ Implémentez les techniques martiales mentionnées dans le livre :
    }
    ```
 
-#### 6.4.2 Système d'inventaire enrichi
+#### 5.4.2 Système d'inventaire enrichi
 Ajoutez des objets spéciaux du livre avec des effets uniques :
 
 ```java
@@ -402,7 +404,7 @@ public static Objet creerParcheminDuVent() {
 }
 ```
 
-#### 6.4.3 Carte des chapitres interactive
+#### 5.4.3 Carte des chapitres interactive
 Améliorez la visualisation de la progression du joueur :
 
 ```java
@@ -431,11 +433,11 @@ public void initialiserCarteComplete() {
 }
 ```
 
-### 6.5 Tests et validation approfondis
+### 5.5 Tests et validation approfondis
 
 Pour garantir la qualité de votre contribution, suivez ces étapes de test détaillées :
 
-#### 6.5.1 Tests narratifs
+#### 5.5.1 Tests narratifs
 1. **Couverture des choix** : 
    - Parcourez chaque branche narrative pour vérifier que tous les choix mènent aux chapitres attendus
    - Testez les conditions spéciales (objets requis, tests d'attributs)
@@ -444,7 +446,7 @@ Pour garantir la qualité de votre contribution, suivez ces étapes de test dét
    - Vérifiez que les transitions entre chapitres existants et nouveaux sont logiques
    - Assurez-vous que les références à des événements passés sont correctes
 
-#### 6.5.2 Tests techniques
+#### 5.5.2 Tests techniques
 1. **Équilibrage des combats** :
    - Testez chaque combat avec différentes valeurs d'Habileté et d'Endurance
    - Vérifiez que la difficulté est appropriée à la progression du joueur
@@ -459,7 +461,7 @@ Pour garantir la qualité de votre contribution, suivez ces étapes de test dét
    java --enable-preview -jar EpeeDuSamourai.jar
    ```
 
-#### 6.5.3 Documentation du test
+#### 5.5.3 Documentation du test
 Créez un document de test décrivant vos scénarios de test et résultats :
 ```
 # Rapport de test - Chapitre X
@@ -479,16 +481,16 @@ Créez un document de test décrivant vos scénarios de test et résultats :
 - Le combat contre le seigneur démon est trop difficile
 ```
 
-### 6.6 Ressources détaillées pour le développement
+### 5.5 Ressources détaillées pour le développement
 
 Pour continuer efficacement le développement, ces ressources sont essentielles :
 
-#### 6.6.1 Ressources littéraires
+#### 5.6.1 Ressources littéraires
 - **Livre original** : "L'Épée du Samouraï" par Mark Smith et Jamie Thomson (ISBN: 2-07-056648-0)
 - **Documentation des règles** : Consultez les pages 9-20 du livre pour les mécaniques de jeu
 - **Structure narrative** : Cartographiez les sections du livre pour comprendre les connexions
 
-#### 6.6.2 Ressources techniques
+#### 5.6.2 Ressources techniques
 - **Documentation JavaDoc** : Générez une documentation JavaDoc pour le code existant :
   ```bash
   cd /home/malek/Documents/Projects/Java-Mini-Project
@@ -500,7 +502,7 @@ Pour continuer efficacement le développement, ces ressources sont essentielles 
   * Versionning: Git avec branches par chapitre
   * Tests: JUnit pour les tests unitaires de la logique de jeu
 
-#### 6.6.3 Ressources artistiques
+#### 5.6.3 Ressources artistiques
 - **Banques d'images** : 
   * Artstation pour des concepts arts de style samouraï
   * Wikimedia Commons pour des images historiques du Japon féodal
@@ -511,7 +513,7 @@ Pour continuer efficacement le développement, ces ressources sont essentielles 
 
 Les contributeurs sont vivement encouragés à respecter l'esprit du projet tout en apportant leur créativité. L'objectif est de créer une adaptation fidèle mais enrichie du livre-jeu original, offrant aux joueurs une expérience immersive dans l'univers du samouraï.
 
-## 4. Crédits
+## 6. Crédits
 
 Ce jeu est une adaptation numérique du livre-jeu "L'Épée du Samouraï" écrit par Mark Smith et Jamie Thomson, et traduit en français par Pascale Jusforgues.
 
