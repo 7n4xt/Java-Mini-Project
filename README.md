@@ -36,10 +36,62 @@ Le jeu "L'Épée du Samouraï" est une adaptation numérique d'un livre-jeu, dé
 - **Système de statistiques** (habileté, endurance, etc.)
 - **Sauvegarde/Chargement** de partie
 
-
 ### 1.4 Design de l'interface
 
 [Interface graphique](https://github.com/7n4xt/Java-Mini-Project/blob/main/src/Examples/Interface-graphique-1.png)
+
+### 1.5 Structure du projet
+
+Le projet est organisé selon la structure suivante:
+
+```
+src/
+├── Main.java                     # Point d'entrée du programme
+├── Assets/                       # Ressources graphiques et multimédia
+│   ├── Fonts/                    # Polices de caractères
+│   │   └── Pixellari.ttf
+│   └── Photos/                   # Images et arrière-plans
+│       ├── 4755308.jpg
+│       └── wp6177681-samurai-4k-wallpapers.jpg
+├── controller/                   # Contrôleurs (pattern MVC)
+│   ├── ChapterProgressManager.java  # Gestion de la progression
+│   ├── GameController.java       # Contrôleur principal du jeu
+│   └── ScenarioLoader.java       # Chargement des scénarios
+├── model/                        # Modèles de données (pattern MVC)
+│   ├── Chapitre.java            # Représentation d'un chapitre du jeu
+│   ├── Choix.java               # Options de choix pour les joueurs
+│   ├── Combat.java              # Mécaniques de combat
+│   ├── Enemy.java               # Définition des ennemis
+│   ├── Personnage.java          # Personnage du joueur
+│   └── Scenario.java            # Structure narrative complète
+├── view/                         # Interfaces utilisateur (pattern MVC)
+│   ├── CharacterAvatar.java     # Affichage de l'avatar du personnage
+│   ├── CharacterSelectionDialog.java # Dialogue de sélection de personnage
+│   ├── CombatEnhancer.java      # Améliorations pour l'interface de combat
+│   ├── CombatHelper.java        # Assistant pour les combats
+│   ├── CombatStrategiesUI.java  # Interface pour les stratégies de combat
+│   ├── CombatUI.java            # Interface de combat principale
+│   ├── CombatUIAdapter.java     # Adaptateur pour l'interface de combat
+│   ├── EndChapterDialog.java    # Dialogue de fin de chapitre
+│   ├── EnhancedCombatUI.java    # Interface de combat améliorée
+│   ├── HelpWindow.java          # Fenêtre d'aide
+│   ├── InventoryWindow.java     # Fenêtre d'inventaire
+│   ├── LoseChapterDialog.java   # Dialogue de défaite
+│   ├── MenuUI.java              # Interface du menu principal
+│   ├── SamuraiSwingUI.java      # Interface graphique principale
+│   ├── SamuraiSwingUIFixer.java # Correctifs pour l'interface
+│   ├── StaminaSystem.java       # Système de gestion de l'endurance
+│   ├── StaminaTipsWindow.java   # Conseils sur l'endurance
+│   ├── SwingUI.java             # Interface utilisateur basique
+│   ├── TextRenderingFixer.java  # Correctifs pour le rendu du texte
+│   └── VictoryDialog.java       # Dialogue de victoire
+└── Examples/                     # Exemples et captures d'écran
+    ├── Interface-graphique-1.png
+    ├── Screenshot From 2025-05-06 09-07-16.png
+    └── Screenshot From 2025-05-16 14-13-40.png
+```
+
+Cette structure suit le pattern Modèle-Vue-Contrôleur (MVC), séparant clairement les données du jeu (model), les interfaces utilisateur (view) et la logique de contrôle (controller).
 
 ## 2. Présentation du jeu
 
