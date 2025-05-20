@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>-</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+  <style type="text/css">@font-face {
+font-family: fira-sans;
+src: local("FiraSans-Regular");
+}
+@font-face {
+font-family: fira-mono;
+src: local("FiraMono-Regular");
+}
+@font-face {
+font-family: color-emoji;
+src: local("Noto Color Emoji"), local("Apple Color Emoji"), local("Segoe UI Emoji"), local("Segoe UI Symbol");
+}
+:root {
+--text-color: #24292e;
+--background-color: #ffffff;
+--alt-background-color: #f6f8fa;
+--link-color: #0366d6;
+--blockquote-text-color: #6a737d;
+--blockquote-border-color: #dfe2e5;
+--header-border-color: #eaecef;
+--hr-background-color: #e1e4e8;
+--table-tr-border-color: #c6cbd1;
+--table-td-border-color: #dfe2e5;
+--kbd-text-color: #444d56;
+--kbd-background-color: #fafbfc;
+--kbd-border-color: #c6cbd1;
+--kbd-shadow-color: #959da5;
+}
+* {
+box-sizing: border-box;
+}
+html {
+font-size: 16px;
+}
+body {
+color: var(--text-color);
+background-color: var(--background-color);
+font-family: "Fira Sans", fira-sans, sans-serif, color-emoji;
+line-height: 1.5;
+word-wrap: break-word;
+max-width: 980px;
+margin: auto;
+margin-top: 60px;
+padding: 4em;
+}
+@media screen and (max-width: 799px) {
+html {
+font-size: 14px;
+}
+body {
+padding: 1em;
+}
+}
+@media screen and (min-width: 1280px) {
+html {
+font-size: 18px;
+}
+}
+a {
+background-color: transparent;
+color: var(--link-color);
+text-decoration: none;
+}
+a:active,
+a:hover {
+outline-width: 0;
+}
+a:hover {
+text-decoration: underline;
+}
+strong {
+font-weight: bold;
+}
+img {
+border-style: none;
+}
+hr {
+box-sizing: content-box;
+height: 0.25em;
+padding: 0;
+margin: 1.5em 0;
+overflow: hidden;
+background-color: var(--hr-background-color);
+border: 0;
+}
+hr::before {
+display: table;
+content: "";
+}
+hr::after {
+display: table;
+clear: both;
+content: "";
+}
+input {
+font-family: inherit;
+font-size: inherit;
+line-height: inherit;
+margin: 0;
+overflow: visible;
+}
+[type="checkbox"] {
+box-sizing: border-box;
+padding: 0;
+}
+table {
+border-spacing: 0;
+border-collapse: collapse;
+}
+td,
+th {
+padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+font-weight: bold;
+margin: 0;
+}
+h1 {
+font-size: 2em;
+}
+h2 {
+font-size: 1.5em;
+}
+h3 {
+font-size: 1.25em;
+}
+h4 {
+font-size: 1em;
+}
+h5 {
+font-size: 0.875em;
+}
+h6 {
+font-size: 0.85em;
+}
+p {
+margin-top: 0;
+margin-bottom: 0.625em;
+}
+blockquote {
+margin: 0;
+}
+ul,
+ol {
+padding-left: 0;
+margin-top: 0;
+margin-bottom: 0;
+}
+ol ol,
+ul ol {
+list-style-type: lower-roman;
+}
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
+list-style-type: lower-alpha;
+}
+dd {
+margin-left: 0;
+}
+code,
+kbd,
+pre {
+font-family: "Fira Mono", fira-mono, monospace, color-emoji;
+font-size: 1em;
+word-wrap: normal;
+}
+code {
+border-radius: 0.1875em;
+font-size: 0.85em;
+padding: 0.2em 0.4em;
+margin: 0;
+}
+pre {
+margin-top: 0;
+margin-bottom: 0;
+font-size: 0.75em;
+}
+pre>code {
+padding: 0;
+margin: 0;
+font-size: 1em;
+word-break: normal;
+white-space: pre;
+background: transparent;
+border: 0;
+}
+.highlight {
+margin-bottom: 1em;
+}
+.highlight pre {
+margin-bottom: 0;
+word-break: normal;
+}
+.highlight pre,
+pre {
+padding: 1em;
+overflow: auto;
+font-size: 0.85em;
+line-height: 1.5;
+background-color: var(--alt-background-color);
+border-radius: 0.1875em;
+}
+pre code {
+background-color: transparent;
+border: 0;
+display: inline;
+padding: 0;
+margin: 0;
+overflow: visible;
+line-height: inherit;
+word-wrap: normal;
+}
+.pl-0 {
+padding-left: 0 !important;
+}
+.pl-1 {
+padding-left: 0.25em !important;
+}
+.pl-2 {
+padding-left: 0.5em !important;
+}
+.pl-3 {
+padding-left: 1em !important;
+}
+.pl-4 {
+padding-left: 1.5em !important;
+}
+.pl-5 {
+padding-left: 2em !important;
+}
+.pl-6 {
+padding-left: 2.5em !important;
+}
+.markdown-body::before {
+display: table;
+content: "";
+}
+.markdown-body::after {
+display: table;
+clear: both;
+content: "";
+}
+.markdown-body>*:first-child {
+margin-top: 0 !important;
+}
+.markdown-body>*:last-child {
+margin-bottom: 0 !important;
+}
+a:not([href]) {
+color: inherit;
+text-decoration: none;
+}
+.anchor {
+float: left;
+padding-right: 0.25em;
+margin-left: -1.25em;
+line-height: 1;
+}
+.anchor:focus {
+outline: none;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table,
+pre {
+margin-top: 0;
+margin-bottom: 1em;
+}
+blockquote {
+padding: 0 1em;
+color: var(--blockquote-text-color);
+border-left: 0.25em solid var(--blockquote-border-color);
+}
+blockquote>:first-child {
+margin-top: 0;
+}
+blockquote>:last-child {
+margin-bottom: 0;
+}
+kbd {
+display: inline-block;
+padding: 0.1875em 0.3125em;
+font-size: 0.6875em;
+line-height: 1;
+color: var(--kbd-text-color);
+vertical-align: middle;
+background-color: var(--kbd-background-color);
+border: solid 1px var(--kbd-border-color);
+border-bottom-color: var(--kbd-shadow-color);
+border-radius: 3px;
+box-shadow: inset 0 -1px 0 var(--kbd-shadow-color);;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+margin-top: 1.5em;
+margin-bottom: 1em;
+font-weight: bold;
+line-height: 1.25;
+}
+h1:hover .anchor,
+h2:hover .anchor,
+h3:hover .anchor,
+h4:hover .anchor,
+h5:hover .anchor,
+h6:hover .anchor {
+text-decoration: none;
+}
+h1 {
+padding-bottom: 0.3em;
+font-size: 2em;
+border-bottom: 1px solid var(--header-border-color);
+}
+h2 {
+padding-bottom: 0.3em;
+font-size: 1.5em;
+border-bottom: 1px solid var(--header-border-color);
+}
+h3 {
+font-size: 1.25em;
+}
+h4 {
+font-size: 1em;
+}
+h5 {
+font-size: 0.875em;
+}
+h6 {
+font-size: 0.85em;
+opacity: 0.67;
+}
+ul,
+ol {
+padding-left: 2em;
+}
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+margin-top: 0;
+margin-bottom: 0;
+}
+li {
+overflow-wrap: break-word;
+}
+li>p {
+margin-top: 1em;
+}
+li+li {
+margin-top: 0.25em;
+}
+dl {
+padding: 0;
+}
+dl dt {
+padding: 0;
+margin-top: 1em;
+font-size: 1em;
+font-style: italic;
+font-weight: bold;
+}
+dl dd {
+padding: 0 1em;
+margin-bottom: 1em;
+}
+table {
+display: block;
+width: 100%;
+overflow: auto;
+}
+table th {
+font-weight: bold;
+}
+table th,
+table td {
+padding: 0.375em 0.8125em;
+border: 1px solid var(--table-td-border-color);
+}
+table tr {
+background-color: var(--background-color);
+border-top: 1px solid var(--table-tr-border-color);
+}
+table tr:nth-child(2n) {
+background-color: var(--alt-background-color);
+}
+img {
+max-width: 100%;
+box-sizing: content-box;
+}
+img[align=right] {
+padding-left: 1.25em;
+}
+img[align=left] {
+padding-right: 1.25em;
+}
+.task-list-item {
+list-style-type: none;
+}
+.task-list-item+.task-list-item {
+margin-top: 0.1875em;
+}
+.task-list-item input {
+margin: 0 0.2em 0.25em -1.6em;
+vertical-align: middle;
+}
+:root {
+--text-color: rgba(0, 0, 0, 0.8);
+--background-color: #f5f5f5;
+--alt-background-color: #eeeeee;
+--link-color: #0d71de;
+--blockquote-text-color: #747e85;
+--blockquote-border-color: #d6d8da;
+--header-border-color: #e1e2e4;
+--hr-background-color: #d8dadd;
+--table-tr-border-color: #bdc1c6;
+--table-td-border-color: #d6d8da;
+--kbd-text-color: #4e585e;
+--kbd-background-color: #f1f1f1;
+--kbd-border-color: #bdc1c6;
+--kbd-shadow-color: #8c939a;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+--text-color: #eeeeee;
+--background-color: #282828;
+--alt-background-color: #3a3a3a;
+--link-color: #b5daff;
+--blockquote-text-color: #a8a8a6;
+--blockquote-border-color: #525252;
+--header-border-color: #474747;
+--hr-background-color: #505050;
+--table-tr-border-color: #696969;
+--table-td-border-color: #525252;
+--kbd-text-color: #cececc;
+--kbd-background-color: #3c3c3c;
+--kbd-border-color: #696969;
+--kbd-shadow-color: #979797;
+}
+}
+</style>
+</head>
+<body>
+<h1 id="lépée-du-samouraï">L’Épée du Samouraï</h1>
+<h2 id="analyse-du-projet">1. Analyse du projet</h2>
+<h3 id="structure-du-projet">1.1 Structure du projet</h3>
+<p>Le jeu “L’Épée du Samouraï” est une adaptation numérique d’un livre-jeu, développée en Java selon l’architecture MVC (Modèle-Vue-Contrôleur) :</p>
+<ul>
+<li><strong>Modèle</strong> : Représente les données du jeu (chapitres, personnage, ennemis)</li>
+<li><strong>Vue</strong> : Interface utilisateur (console ou graphique)</li>
+<li><strong>Contrôleur</strong> : Gestion de la logique du jeu</li>
+</ul>
+<h3 id="composants-principaux">1.2 Composants principaux</h3>
+<h4 id="modèle">Modèle</h4>
+<ul>
+<li><code>Chapitre</code> : Représente un chapitre du livre avec son texte et ses choix</li>
+<li><code>Personnage</code> : Gère les statistiques et l’inventaire du joueur</li>
+<li><code>Enemy</code> : Définit les caractéristiques des ennemis</li>
+<li><code>Scenario</code> : Organise l’ensemble des chapitres du jeu</li>
+</ul>
+<h4 id="vue">Vue</h4>
+<ul>
+<li><code>SamuraiSwingUI</code> : Interface graphique principale avec style samouraï</li>
+<li><code>CombatUI</code> : Interface de combat</li>
+<li><code>ChapterMapUI</code> : Carte des chapitres montrant la progression</li>
+</ul>
+<h4 id="contrôleur">Contrôleur</h4>
+<ul>
+<li><code>GameController</code> : Gère la progression du joueur dans l’histoire</li>
+<li><code>ScenarioLoader</code> : Charge les scénarios de jeu</li>
+</ul>
+<h3 id="fonctionnalités-implémentées">1.3 Fonctionnalités implémentées</h3>
+<ul>
+<li><strong>Navigation narrative</strong> : Progression à travers différents chapitres</li>
+<li><strong>Système de combat</strong> basé sur les règles du livre original</li>
+<li><strong>Gestion d’inventaire</strong> et utilisation d’objets</li>
+<li><strong>Carte des chapitres</strong> pour visualiser la progression</li>
+<li><strong>Système de statistiques</strong> (habileté, endurance, etc.)</li>
+<li><strong>Sauvegarde/Chargement</strong> de partie</li>
+</ul>
+<h3 id="design-de-linterface">1.4 Design de l’interface</h3>
+<p><a href="https://github.com/7n4xt/Java-Mini-Project/blob/main/src/Examples/Interface-graphique-1.png">Interface graphique</a></p>
+<h2 id="présentation-du-jeu">2. Présentation du jeu</h2>
+<h3 id="lhistoire">2.1 L’histoire</h3>
+<p>“L’Épée du Samouraï” est un jeu d’aventure textuel inspiré des livres-jeux. Vous incarnez un samouraï en quête de l’épée légendaire de votre ancêtre, connue sous le nom de “Mort Joyeuse”.</p>
+<p>Le Shogun Kihei Hasekawa vous a confié la mission de retrouver cette épée qui a été dérobée par Ikiru, le Maître des Ombres. Sans cette épée, le Shogun perd peu à peu son autorité, et des seigneurs félons commencent à se rallier à Ikiru.</p>
+<p>Votre aventure vous conduira à travers des forêts mystérieuses, des villages abandonnés et des montagnes dangereuses, jusqu’au repaire d’Ikiru dans le Gouffre des Démons.</p>
+<h3 id="mécaniques-de-jeu">2.2 Mécaniques de jeu</h3>
+<ul>
+<li><strong>Système de chapitres</strong> : L’histoire se déroule à travers plusieurs chapitres avec des choix multiples</li>
+<li><strong>Combats tactiques</strong> : Affrontez des ennemis en utilisant votre habileté et votre endurance</li>
+<li><strong>Objets et inventaire</strong> : Collectez et utilisez des objets pour vous aider dans votre quête</li>
+<li><strong>Statistiques variables</strong> : Vos caractéristiques évoluent selon vos choix et les combats</li>
+<li><strong>Plusieurs fins possibles</strong> : Vos décisions influencent le déroulement et la conclusion de l’histoire</li>
+</ul>
+<h3 id="interface-utilisateur">2.3 Interface utilisateur</h3>
+<p>Le jeu propose deux interfaces : - Une interface textuelle pour les puristes - Une interface graphique élaborée dans le style samouraï pour une expérience immersive</p>
+<h2 id="installation-et-exécution">3. Installation et exécution</h2>
+<h3 id="prérequis">3.1 Prérequis</h3>
+<ul>
+<li>Java Development Kit (JDK) version 21</li>
+<li>Un environnement capable d’exécuter des applications Java Swing</li>
+</ul>
+<h3 id="installation">3.2 Installation</h3>
+<ol type="1">
+<li>Téléchargez le code source depuis le dépôt GitHub ou utilisez la version compilée</li>
+<li>Si vous utilisez le code source, assurez-vous que la structure des dossiers est préservée</li>
+</ol>
+<h3 id="exécution">3.3 Exécution</h3>
+<p>Pour lancer le jeu :</p>
+<ol type="1">
+<li>Ouvrez le fichier <code>src/Main.java</code> dans votre IDE ou éditeur de texte.</li>
+<li>Exécutez la fonction <code>main</code> de la classe <code>Main</code>.</li>
+</ol>
+<p>Vous pouvez également utiliser la ligne de commande :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/abdulmalek/Documents/Projects/Java-Mini-Project</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">javac</span> src/Main.java</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-cp</span> src Main</span></code></pre></div>
+<p>Assurez-vous d’avoir Java installé (JDK 21 recommandé).</p>
+<h3 id="configuration-requise">3.4 Configuration requise</h3>
+<ul>
+<li><strong>Système d’exploitation</strong> : Windows 10/11, macOS 10.15+, ou Linux récent</li>
+<li><strong>Processeur</strong> : Dual Core 2GHz ou plus</li>
+<li><strong>Mémoire</strong> : 4 Go RAM minimum</li>
+<li><strong>Espace disque</strong> : 100 Mo disponibles</li>
+<li><strong>Affichage</strong> : Résolution minimum de 1024x768</li>
+<li><strong>Java Runtime Environment (JRE)</strong> : Version 21 ou ultérieure</li>
+</ul>
+<h2 id="développement-du-projet">4. Développement du projet</h2>
+<h3 id="prompts-utilisés-pour-le-développement-avec-lia">4.1 Prompts utilisés pour le développement avec l’IA</h3>
+<p>Le développement de ce projet a été assisté par l’IA en utilisant les prompts suivants:</p>
+<ol type="1">
+<li><p><strong>Architecture du projet</strong> :</p>
+<pre><code>Cree l&#39;archi de ce projet, le nom de livre est l&#39;épée de samouraï</code></pre></li>
+<li><p><strong>Interface graphique inspirée de Ghost of Tsushima</strong> :</p>
+<pre><code>add a menu when chosing the graphcal interface based of the screenshot that i gave and add both two pages, and make the game fullscreen and make the style more ghost of tsushima like samurai style you know.</code></pre></li>
+<li><p><strong>Animation de fond d’écran</strong> :</p>
+<pre><code>i have an animated wallpaper its a mp4 video called wandering-samurai-no-way-home-moewalls-com.mp4 in the resuorces folder and i want you to make it the background of the menu and make it loop, and change the position of the menu buttons to the right make the buttons a bit rounded add some hover effects</code></pre></li>
+<li><p><strong>Dialogue de sélection d’interface</strong> :</p>
+<pre><code>instead of giving the choice in the terminal you make a small popup using the same theme of the game</code></pre></li>
+<li><p><strong>Système de combat</strong> :</p>
+<pre><code>implement a combat system based on the photo i gave you for the ui, in the first chapter there should be a ninja garden to defeat, when defeated the game continue otherwise the lose dialog shows hime that he was defeated by the ninja, also in the photo i gave you there is an inventory button, the user can use the items, and read the readme file make the game based on that</code></pre></li>
+</ol>
+<h3 id="approche-de-développement-vibe-coding">4.2 Approche de développement “Vibe Coding”</h3>
+<p>Le projet a été développé en utilisant l’approche “vibe coding”, qui consiste à:</p>
+<ol type="1">
+<li><strong>Conception itérative</strong> basée sur des screenshots et références visuelles</li>
+<li><strong>Développement orienté ambiance</strong> pour créer une atmosphère immersive de samouraï</li>
+<li><strong>Utilisation de prompts</strong> pour guider le développement avec l’aide de l’IA</li>
+<li><strong>Focus sur l’expérience utilisateur</strong> en privilégiant le style visuel et l’ergonomie</li>
+</ol>
+<p>Cette approche a permis de créer une interface cohérente avec l’univers du jeu et d’offrir une expérience utilisateur immersive dans l’esprit des jeux de samouraï comme Ghost of Tsushima.</p>
+<h2 id="comment-continuer-le-développement-du-jeu">5. Comment continuer le développement du jeu</h2>
+<p>Ce jeu est actuellement en cours de développement avec certains chapitres non finalisés. Si vous souhaitez contribuer à son achèvement, cette section détaille la méthodologie à suivre pour intégrer harmonieusement votre contribution au projet existant.</p>
+<h3 id="structure-narrative-détaillée">5.1 Structure narrative détaillée</h3>
+<p>Le jeu “L’Épée du Samouraï” suit fidèlement la structure du livre-jeu original, avec une architecture narrative adaptée au format interactif :</p>
+<ol type="1">
+<li><strong>Organisation des chapitres</strong> :
+<ul>
+<li>Chaque section du livre correspond à un objet <code>Chapitre</code> dans le code</li>
+<li>Les chapitres sont numérotés selon la même logique que le livre original</li>
+<li>Les choix du joueur déterminent le flux narratif entre les chapitres</li>
+</ul></li>
+<li><strong>Éléments à reproduire</strong> :
+<ul>
+<li>Texte narratif (descriptions, dialogues)</li>
+<li>Options de choix et leurs conséquences</li>
+<li>Tests d’attributs (Habileté, Endurance, Chance)</li>
+<li>Rencontres avec des ennemis et mécaniques de combat</li>
+<li>Acquisition et utilisation d’objets</li>
+</ul></li>
+<li><strong>Adaptation au format numérique</strong> :
+<ul>
+<li>Ajout d’illustrations et d’éléments visuels correspondant au texte</li>
+<li>Effets sonores appropriés aux situations (combats, découvertes)</li>
+<li>Indicateurs visuels pour les statistiques du personnage</li>
+</ul></li>
+</ol>
+<h3 id="guide-complet-pour-ajouter-un-nouveau-chapitre">5.2 Guide complet pour ajouter un nouveau chapitre</h3>
+<p>Pour intégrer un nouveau chapitre au jeu, suivez ce processus détaillé :</p>
+<h4 id="étape-1-analyse-du-livre-jeu">Étape 1 : Analyse du livre-jeu</h4>
+<ol type="1">
+<li>Identifiez la section du livre que vous souhaitez implémenter</li>
+<li>Notez tous les choix possibles et leurs destinations</li>
+<li>Identifiez les combats, tests d’attributs et objets spéciaux</li>
+<li>Repérez les connexions avec les chapitres déjà implémentés</li>
+</ol>
+<h4 id="étape-2-préparation-du-code">Étape 2 : Préparation du code</h4>
+<ol type="1">
+<li>Ouvrez le fichier <code>controller/ScenarioLoader.java</code></li>
+<li>Examinez les méthodes existantes (<code>creerScenarioChapitre1()</code>, <code>creerScenarioChapitre2()</code>) pour comprendre le style et la structure</li>
+<li>Créez une nouvelle méthode pour votre chapitre (exemple : <code>creerScenarioChapitreX()</code>)</li>
+</ol>
+<h4 id="étape-3-implémentation-du-chapitre">Étape 3 : Implémentation du chapitre</h4>
+<p>Suivez ce modèle détaillé pour l’implémentation :</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">/**</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a> <span class="co">*</span> Cr<span class="co">é</span>e un sc<span class="co">é</span>nario pour le chapitre X</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="co">*</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * </span><span class="an">@return</span> Un nouveau sc<span class="co">é</span>nario contenant les sections du chapitre X</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="co">*/</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> Scenario <span class="fu">creerScenarioChapitreX</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">out</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;Création du scénario du chapitre X...&quot;</span><span class="op">);</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        Scenario scenario <span class="op">=</span> <span class="kw">new</span> <span class="fu">Scenario</span><span class="op">(</span><span class="st">&quot;L&#39;Épée du Samouraï - Chapitre X: [Titre]&quot;</span><span class="op">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Description détaillée du chapitre avec contexte narratif]&quot;</span><span class="op">);</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Section 1 - Début du chapitre</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        Chapitre chapitre1 <span class="op">=</span> <span class="kw">new</span> <span class="fu">Chapitre</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="st">&quot;[Titre évocateur]&quot;</span><span class="op">,</span> </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Texte narratif détaillé avec descriptions, dialogues et ambiance]</span><span class="sc">\n\n</span><span class="st">&quot;</span> <span class="op">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Suite du texte avec mise en situation et éléments importants]</span><span class="sc">\n\n</span><span class="st">&quot;</span> <span class="op">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Présentation des choix possibles ou de la situation à résoudre]&quot;</span><span class="op">,</span> <span class="kw">false</span><span class="op">);</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Section 2 - Suite de l&#39;aventure après un choix</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        Chapitre chapitre2 <span class="op">=</span> <span class="kw">new</span> <span class="fu">Chapitre</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="st">&quot;[Titre de la section]&quot;</span><span class="op">,</span> </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Conséquences du choix précédent et nouvelle situation]</span><span class="sc">\n\n</span><span class="st">&quot;</span> <span class="op">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Développement de l&#39;intrigue avec nouveaux éléments narratifs]&quot;</span><span class="op">,</span> <span class="kw">false</span><span class="op">);</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Section finale ou importante - Potentiellement une fin (victoire ou défaite)</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        Chapitre chapitreFinal <span class="op">=</span> <span class="kw">new</span> <span class="fu">Chapitre</span><span class="op">(</span><span class="dv">10</span><span class="op">,</span> <span class="st">&quot;Fin du parcours&quot;</span><span class="op">,</span> </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Description de la conclusion de ce chapitre et transition vers le suivant]&quot;</span><span class="op">,</span> <span class="kw">true</span><span class="op">);</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Définition des choix pour chaque section</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        chapitre1<span class="op">.</span><span class="fu">ajouterChoix</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Choix</span><span class="op">(</span><span class="st">&quot;[Description détaillée du premier choix]&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="kw">false</span><span class="op">));</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        chapitre1<span class="op">.</span><span class="fu">ajouterChoix</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Choix</span><span class="op">(</span><span class="st">&quot;[Description détaillée du second choix]&quot;</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="kw">false</span><span class="op">));</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        chapitre1<span class="op">.</span><span class="fu">ajouterChoix</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Choix</span><span class="op">(</span><span class="st">&quot;[Option cachée ou disponible sous condition]&quot;</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="kw">true</span><span class="op">));</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Définition des ennemis (avec statistiques équilibrées)</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        Enemy ennemi <span class="op">=</span> <span class="kw">new</span> <span class="fu">Enemy</span><span class="op">(</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;[Nom caractéristique]&quot;</span><span class="op">,</span>          <span class="co">// Nom</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="dv">7</span><span class="op">,</span>                                <span class="co">// Habileté (entre 5-12 selon difficulté)</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>            <span class="dv">10</span><span class="op">,</span>                               <span class="co">// Endurance (entre 5-15 selon importance)</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;[Description physique détaillée et comportement au combat]&quot;</span>  <span class="co">// Description</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">);</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        chapitre2<span class="op">.</span><span class="fu">setEnemy</span><span class="op">(</span>ennemi<span class="op">);</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Configuration des chapitres de défaite</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        Chapitre chapitreDefaite <span class="op">=</span> <span class="kw">new</span> <span class="fu">Chapitre</span><span class="op">(</span><span class="dv">99</span><span class="op">,</span> <span class="st">&quot;Défaite&quot;</span><span class="op">,</span> </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;[Description de la défaite contre l&#39;ennemi avec conséquences narratives]&quot;</span><span class="op">,</span> <span class="kw">true</span><span class="op">);</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        chapitre2<span class="op">.</span><span class="fu">setChapitreDefaite</span><span class="op">(</span>chapitreDefaite<span class="op">);</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Ajout de tous les chapitres au scénario</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>        scenario<span class="op">.</span><span class="fu">ajouterChapitre</span><span class="op">(</span>chapitre1<span class="op">);</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>        scenario<span class="op">.</span><span class="fu">ajouterChapitre</span><span class="op">(</span>chapitre2<span class="op">);</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>        <span class="co">// [Ajouter tous les autres chapitres]</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>        scenario<span class="op">.</span><span class="fu">ajouterChapitre</span><span class="op">(</span>chapitreFinal<span class="op">);</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>        scenario<span class="op">.</span><span class="fu">ajouterChapitre</span><span class="op">(</span>chapitreDefaite<span class="op">);</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> scenario<span class="op">;</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">catch</span> <span class="op">(</span><span class="bu">Exception</span> e<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>        <span class="bu">System</span><span class="op">.</span><span class="fu">err</span><span class="op">.</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;Erreur lors de la création du scénario du chapitre X: &quot;</span> <span class="op">+</span> e<span class="op">.</span><span class="fu">getMessage</span><span class="op">());</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>        e<span class="op">.</span><span class="fu">printStackTrace</span><span class="op">();</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="étape-4-intégration-au-jeu">Étape 4 : Intégration au jeu</h4>
+<ol type="1">
+<li>Ouvrez la classe <code>Main.java</code></li>
+<li>Localisez la méthode <code>preloadScenarios()</code></li>
+<li>Ajoutez l’appel à votre nouvelle méthode :</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">preloadScenarios</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Scénarios existants</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ScenarioLoader<span class="op">.</span><span class="fu">creerScenarioChapitre1</span><span class="op">();</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    ScenarioLoader<span class="op">.</span><span class="fu">creerScenarioChapitre2</span><span class="op">();</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Votre nouveau scénario</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    ScenarioLoader<span class="op">.</span><span class="fu">creerScenarioChapitreX</span><span class="op">();</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="étape-5-création-déléments-visuels-associés">Étape 5 : Création d’éléments visuels associés</h4>
+<ol type="1">
+<li>Sélectionnez ou créez des images d’ambiance correspondant à votre chapitre</li>
+<li>Placez-les dans <code>src/Assets/Photos/</code></li>
+<li>Référencez-les dans l’interface utilisateur lors de l’affichage du chapitre</li>
+</ol>
+<h3 id="lier-les-chapitres-existants-avec-précision">5.3 Lier les chapitres existants avec précision</h3>
+<p>Pour créer une progression narrative fluide entre les chapitres existants et nouveaux :</p>
+<ol type="1">
+<li><p><strong>Analyse des points de connexion</strong> :</p>
+<ul>
+<li>Ouvrez les fichiers de chapitres existants dans <code>controller/ScenarioLoader.java</code></li>
+<li>Identifiez les chapitres de fin ou points de transition (par exemple, <code>chapitre6</code> dans le premier scénario)</li>
+<li>Repérez les attributs <code>estFin</code> mis à <code>true</code> dans les chapitres existants</li>
+</ul></li>
+<li><p><strong>Modification des chapitres de transition</strong> :</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Exemple de modification d&#39;un chapitre de fin existant pour créer une transition</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>Chapitre chapitreTransition <span class="op">=</span> scenario<span class="op">.</span><span class="fu">getChapitre</span><span class="op">(</span><span class="dv">6</span><span class="op">);</span> <span class="co">// Récupérer le chapitre de transition</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>chapitreTransition<span class="op">.</span><span class="fu">setEstFin</span><span class="op">(</span><span class="kw">false</span><span class="op">);</span> <span class="co">// Le marquer comme non final</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>chapitreTransition<span class="op">.</span><span class="fu">ajouterChoix</span><span class="op">(</span><span class="kw">new</span> <span class="fu">Choix</span><span class="op">(</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Continuer votre quête vers les montagnes de l&#39;est&quot;</span><span class="op">,</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span><span class="op">,</span> <span class="co">// ID du premier chapitre de votre nouveau scénario</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">false</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">));</span></span></code></pre></div></li>
+<li><p><strong>Création d’un système de transition entre scénarios</strong> :</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Dans GameController.java - Ajouter une méthode pour gérer les transitions</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">transitionVersScenario</span><span class="op">(</span><span class="bu">String</span> nomScenario<span class="op">,</span> <span class="dt">int</span> chapitreId<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Charger le nouveau scénario</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    Scenario nouveauScenario <span class="op">=</span> ScenarioLoader<span class="op">.</span><span class="fu">chargerScenario</span><span class="op">(</span>nomScenario<span class="op">);</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Définir le nouveau scénario comme scénario actuel</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">scenario</span> <span class="op">=</span> nouveauScenario<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Naviguer vers le chapitre spécifié</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">naviguerVersChapitre</span><span class="op">(</span>chapitreId<span class="op">);</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Mettre à jour l&#39;interface</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">notifierObservateurs</span><span class="op">();</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+</ol>
+<h3 id="enrichissement-approfondi-du-gameplay">5.4 Enrichissement approfondi du gameplay</h3>
+<p>Pour améliorer l’expérience de jeu au-delà de la simple narration :</p>
+<h4 id="système-de-combat-avancé">5.4.1 Système de combat avancé</h4>
+<p>Implémentez les techniques martiales mentionnées dans le livre :</p>
+<ol type="1">
+<li><p><strong>Kyujutsu (Art de l’arc)</strong> :</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Dans la classe Combat.java</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">utiliserKyujutsu</span><span class="op">(</span>Personnage joueur<span class="op">,</span> Enemy ennemi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Le joueur attaque à distance avant le combat rapproché</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> degats <span class="op">=</span> <span class="fu">calculerDegatsKyujutsu</span><span class="op">(</span>joueur<span class="op">);</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    ennemi<span class="op">.</span><span class="fu">reduireEndurance</span><span class="op">(</span>degats<span class="op">);</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Notification visuelle et sonore</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">notifierObservateurs</span><span class="op">(</span><span class="st">&quot;kyujutsu&quot;</span><span class="op">,</span> degats<span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="dt">int</span> <span class="fu">calculerDegatsKyujutsu</span><span class="op">(</span>Personnage joueur<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Dégâts basés sur l&#39;habileté et le niveau de Kyujutsu du joueur</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span><span class="op">(</span><span class="dv">2</span><span class="op">,</span> joueur<span class="op">.</span><span class="fu">getNiveauKyujutsu</span><span class="op">())</span> <span class="op">+</span> </span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">lancerDes</span><span class="op">(</span><span class="dv">2</span><span class="op">);</span> <span class="co">// 2D6 pour l&#39;élément aléatoire</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<li><p><strong>Iaijutsu (Art du dégainage rapide)</strong> :</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Implémentation de l&#39;initiative au combat basée sur l&#39;Iaijutsu</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">obtenirInitiative</span><span class="op">(</span>Personnage joueur<span class="op">,</span> Enemy ennemi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> seuilInitiative <span class="op">=</span> <span class="dv">7</span> <span class="op">-</span> joueur<span class="op">.</span><span class="fu">getNiveauIaijutsu</span><span class="op">();</span> <span class="co">// Seuil plus bas = plus facile</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">lancerDes</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">&gt;=</span> seuilInitiative<span class="op">;</span> <span class="co">// 2D6 &gt;= seuil</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<li><p><strong>Karumijutsu (Agilité)</strong> :</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Possibilité d&#39;esquiver les attaques ennemies</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">tenterEsquive</span><span class="op">(</span>Personnage joueur<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> seuilEsquive <span class="op">=</span> <span class="dv">8</span> <span class="op">-</span> joueur<span class="op">.</span><span class="fu">getNiveauKarumijutsu</span><span class="op">();</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">lancerDes</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="op">&gt;=</span> seuilEsquive<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<li><p><strong>Ni-to-Kenjutsu (Combat à deux sabres)</strong> :</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Attaques multiples avec deux sabres</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">attaqueDoubleSabre</span><span class="op">(</span>Personnage joueur<span class="op">,</span> Enemy ennemi<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>joueur<span class="op">.</span><span class="fu">possedeDualKatana</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Première attaque</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">resoudreTourCombat</span><span class="op">(</span>joueur<span class="op">,</span> ennemi<span class="op">);</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Seconde attaque si niveau suffisant</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>joueur<span class="op">.</span><span class="fu">getNiveauNiToKenjutsu</span><span class="op">()</span> <span class="op">&gt;=</span> <span class="dv">2</span> <span class="op">&amp;&amp;</span> ennemi<span class="op">.</span><span class="fu">estVivant</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">resoudreTourCombat</span><span class="op">(</span>joueur<span class="op">,</span> ennemi<span class="op">);</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+</ol>
+<h4 id="système-dinventaire-enrichi">5.4.2 Système d’inventaire enrichi</h4>
+<p>Ajoutez des objets spéciaux du livre avec des effets uniques :</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Dans la classe Personnage.java</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">ajouterObjetSpecial</span><span class="op">(</span><span class="bu">String</span> nom<span class="op">,</span> <span class="bu">String</span> description<span class="op">,</span> <span class="bu">Map</span><span class="op">&lt;</span><span class="bu">String</span><span class="op">,</span> <span class="bu">Integer</span><span class="op">&gt;</span> effets<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    Objet nouvelObjet <span class="op">=</span> <span class="kw">new</span> <span class="fu">Objet</span><span class="op">(</span>nom<span class="op">,</span> description<span class="op">,</span> effets<span class="op">);</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    inventaire<span class="op">.</span><span class="fu">add</span><span class="op">(</span>nouvelObjet<span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Appliquer effets permanents si nécessaire</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>effets<span class="op">.</span><span class="fu">containsKey</span><span class="op">(</span><span class="st">&quot;habiletePermanente&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">this</span><span class="op">.</span><span class="fu">modifierHabilete</span><span class="op">(</span>effets<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;habiletePermanente&quot;</span><span class="op">));</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Exemples d&#39;objets spéciaux à implémenter</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> Objet <span class="fu">creerKatanaDeQualite</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">&lt;</span><span class="bu">String</span><span class="op">,</span> <span class="bu">Integer</span><span class="op">&gt;</span> effets <span class="op">=</span> <span class="kw">new</span> <span class="bu">HashMap</span><span class="op">&lt;&gt;();</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    effets<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;bonusCombat&quot;</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span>  <span class="co">// +1 en combat</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">new</span> <span class="fu">Objet</span><span class="op">(</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Katana de qualité&quot;</span><span class="op">,</span> </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Une lame parfaitement équilibrée forgée par un maître. Confère un bonus de +1 en combat.&quot;</span><span class="op">,</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        effets</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> Objet <span class="fu">creerParcheminDuVent</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">&lt;</span><span class="bu">String</span><span class="op">,</span> <span class="bu">Integer</span><span class="op">&gt;</span> effets <span class="op">=</span> <span class="kw">new</span> <span class="bu">HashMap</span><span class="op">&lt;&gt;();</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    effets<span class="op">.</span><span class="fu">put</span><span class="op">(</span><span class="st">&quot;esquive&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">);</span>  <span class="co">// +2 aux jets d&#39;esquive</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">new</span> <span class="fu">Objet</span><span class="op">(</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Parchemin du Vent&quot;</span><span class="op">,</span> </span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Un ancien parchemin contenant les secrets de l&#39;art de l&#39;esquive.&quot;</span><span class="op">,</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>        effets</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="carte-des-chapitres-interactive">5.4.3 Carte des chapitres interactive</h4>
+<p>Améliorez la visualisation de la progression du joueur :</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Dans ChapterMapUI.java</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">void</span> <span class="fu">initialiserCarteComplete</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Configuration de base de la carte</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setLayout</span><span class="op">(</span><span class="kw">new</span> <span class="fu">AbsoluteLayout</span><span class="op">());</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Créer un graphe des chapitres avec coordonnées X,Y pour chaque nœud</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="bu">Integer</span> chapitreId <span class="op">:</span> scenario<span class="op">.</span><span class="fu">getChapitres</span><span class="op">().</span><span class="fu">keySet</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Calculer position basée sur l&#39;arborescence des choix</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">Point</span> position <span class="op">=</span> <span class="fu">calculerPositionChapitre</span><span class="op">(</span>chapitreId<span class="op">);</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Créer un nœud visuel pour ce chapitre</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JLabel</span> nodeChapitre <span class="op">=</span> <span class="fu">creerNodeChapitre</span><span class="op">(</span>chapitreId<span class="op">,</span> position<span class="op">);</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add</span><span class="op">(</span>nodeChapitre<span class="op">);</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Créer des connexions visuelles vers les chapitres liés</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span>Choix choix <span class="op">:</span> scenario<span class="op">.</span><span class="fu">getChapitre</span><span class="op">(</span>chapitreId<span class="op">).</span><span class="fu">getChoixPossibles</span><span class="op">())</span> <span class="op">{</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">creerConnexion</span><span class="op">(</span>position<span class="op">,</span> <span class="fu">calculerPositionChapitre</span><span class="op">(</span>choix<span class="op">.</span><span class="fu">getDestinationId</span><span class="op">()));</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Marquer le chapitre actuel</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">marquerChapitreActuel</span><span class="op">(</span>gameController<span class="op">.</span><span class="fu">getChapitreActuel</span><span class="op">().</span><span class="fu">getId</span><span class="op">());</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="tests-et-validation-approfondis">5.5 Tests et validation approfondis</h3>
+<p>Pour garantir la qualité de votre contribution, suivez ces étapes de test détaillées :</p>
+<h4 id="tests-narratifs">5.5.1 Tests narratifs</h4>
+<ol type="1">
+<li><strong>Couverture des choix</strong> :
+<ul>
+<li>Parcourez chaque branche narrative pour vérifier que tous les choix mènent aux chapitres attendus</li>
+<li>Testez les conditions spéciales (objets requis, tests d’attributs)</li>
+</ul></li>
+<li><strong>Cohérence de l’histoire</strong> :
+<ul>
+<li>Vérifiez que les transitions entre chapitres existants et nouveaux sont logiques</li>
+<li>Assurez-vous que les références à des événements passés sont correctes</li>
+</ul></li>
+</ol>
+<h4 id="tests-techniques">5.5.2 Tests techniques</h4>
+<ol type="1">
+<li><p><strong>Équilibrage des combats</strong> :</p>
+<ul>
+<li>Testez chaque combat avec différentes valeurs d’Habileté et d’Endurance</li>
+<li>Vérifiez que la difficulté est appropriée à la progression du joueur</li>
+</ul></li>
+<li><p><strong>Performances</strong> :</p>
+<ul>
+<li>Mesurez l’impact de vos ajouts sur le temps de chargement</li>
+<li>Optimisez les ressources (images, sons) pour maintenir la fluidité</li>
+</ul></li>
+<li><p><strong>Compatibilité d’interface</strong> :</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Exécutez le jeu avec différentes résolutions pour tester l&#39;adaptabilité</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">--enable-preview</span> <span class="at">-jar</span> EpeeDuSamourai.jar</span></code></pre></div></li>
+</ol>
+<h4 id="documentation-du-test">5.5.3 Documentation du test</h4>
+<p>Créez un document de test décrivant vos scénarios de test et résultats :</p>
+<pre><code># Rapport de test - Chapitre X
+
+## Tests narratifs
+- Choix 1 → Chapitre Y: OK
+- Choix 2 → Chapitre Z: OK
+- Condition spéciale (possession de l&#39;amulette) → Chapitre W: OK
+
+## Tests de combat
+- Combat contre Ninja (Habileté joueur = 8): 
+  * Victoire à 80% (attendu ~75%)
+  * Perte moyenne d&#39;Endurance: 4 points
+
+## Problèmes identifiés
+- La transition vers le chapitre Z manque de contexte narratif
+- Le combat contre le seigneur démon est trop difficile</code></pre>
+<h3 id="ressources-détaillées-pour-le-développement">5.5 Ressources détaillées pour le développement</h3>
+<p>Pour continuer efficacement le développement, ces ressources sont essentielles :</p>
+<h4 id="ressources-littéraires">5.6.1 Ressources littéraires</h4>
+<ul>
+<li><strong>Livre original</strong> : “L’Épée du Samouraï” par Mark Smith et Jamie Thomson (ISBN: 2-07-056648-0)</li>
+<li><strong>Documentation des règles</strong> : Consultez les pages 9-20 du livre pour les mécaniques de jeu</li>
+<li><strong>Structure narrative</strong> : Cartographiez les sections du livre pour comprendre les connexions</li>
+</ul>
+<h4 id="ressources-techniques">5.6.2 Ressources techniques</h4>
+<ul>
+<li><p><strong>Documentation JavaDoc</strong> : Générez une documentation JavaDoc pour le code existant :</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /home/malek/Documents/Projects/Java-Mini-Project</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">javadoc</span> <span class="at">-d</span> docs <span class="at">-sourcepath</span> src <span class="at">-subpackages</span> controller:model:view</span></code></pre></div></li>
+<li><p><strong>Outils de développement recommandés</strong> :</p>
+<ul>
+<li>IDE: IntelliJ IDEA ou Eclipse avec plugins Java Swing</li>
+<li>Versionning: Git avec branches par chapitre</li>
+<li>Tests: JUnit pour les tests unitaires de la logique de jeu</li>
+</ul></li>
+</ul>
+<h4 id="ressources-artistiques">5.6.3 Ressources artistiques</h4>
+<ul>
+<li><strong>Banques d’images</strong> :
+<ul>
+<li>Artstation pour des concepts arts de style samouraï</li>
+<li>Wikimedia Commons pour des images historiques du Japon féodal</li>
+</ul></li>
+<li><strong>Outils de création graphique</strong> :
+<ul>
+<li>GIMP ou Photoshop pour l’édition d’images</li>
+<li>Inkscape pour les éléments d’interface vectoriels</li>
+</ul></li>
+</ul>
+<p>Les contributeurs sont vivement encouragés à respecter l’esprit du projet tout en apportant leur créativité. L’objectif est de créer une adaptation fidèle mais enrichie du livre-jeu original, offrant aux joueurs une expérience immersive dans l’univers du samouraï.</p>
+<h2 id="crédits">6. Crédits</h2>
+<p>Ce jeu est une adaptation numérique du livre-jeu “L’Épée du Samouraï” écrit par Mark Smith et Jamie Thomson, et traduit en français par Pascale Jusforgues.</p>
+<p>© 2025 - Développé dans le cadre d’un projet éducatif</p>
+</body>
+</html>
