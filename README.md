@@ -80,20 +80,20 @@ Le jeu propose deux interfaces :
 
 ### 3.3 Exécution
 
-Pour lancer le jeu avec Java 21:
+Pour lancer le jeu :
+
+1. Ouvrez le fichier `src/Main.java` dans votre IDE ou éditeur de texte.
+2. Exécutez la fonction `main` de la classe `Main`.
+
+Vous pouvez également utiliser la ligne de commande :
 
 ```bash
-# Depuis le dossier racine du projet
-java --enable-preview -jar EpeeDuSamourai.jar
+cd /home/abdulmalek/Documents/Projects/Java-Mini-Project
+javac src/Main.java
+java -cp src Main
 ```
 
-Ou si vous exécutez depuis les fichiers source:
-
-```bash
-# Depuis le dossier racine du projet
-javac --enable-preview -source 21 src/**/*.java
-java --enable-preview -cp src Main
-```
+Assurez-vous d'avoir Java installé (JDK 21 recommandé).
 
 ### 3.4 Configuration requise
 
@@ -103,12 +103,6 @@ java --enable-preview -cp src Main
 - **Espace disque** : 100 Mo disponibles
 - **Affichage** : Résolution minimum de 1024x768
 - **Java Runtime Environment (JRE)** : Version 21 ou ultérieure
-
-## 4. Crédits
-
-Ce jeu est une adaptation numérique du livre-jeu "L'Épée du Samouraï" écrit par Mark Smith et Jamie Thomson, et traduit en français par Pascale Jusforgues.
-
-© 2025 - Développé dans le cadre d'un projet éducatif
 
 ## 5. Développement du projet
 
@@ -521,3 +515,9 @@ Pour continuer efficacement le développement, ces ressources sont essentielles 
   * Inkscape pour les éléments d'interface vectoriels
 
 Les contributeurs sont vivement encouragés à respecter l'esprit du projet tout en apportant leur créativité. L'objectif est de créer une adaptation fidèle mais enrichie du livre-jeu original, offrant aux joueurs une expérience immersive dans l'univers du samouraï.
+
+## 4. Crédits
+
+Ce jeu est une adaptation numérique du livre-jeu "L'Épée du Samouraï" écrit par Mark Smith et Jamie Thomson, et traduit en français par Pascale Jusforgues.
+
+© 2025 - Développé dans le cadre d'un projet éducatif
