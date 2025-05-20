@@ -1,5 +1,0 @@
-fix text glitch,
-make the game playble like items make the game more enjoyble,
-inventory issues,
-when clicking on an unlocked chapter it should show him a popup that this chapter is not availeble,
-try to make the game contunauble

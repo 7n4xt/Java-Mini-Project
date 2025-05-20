@@ -1,7 +1,5 @@
 # L'Épée du Samouraï
 
-![Logo du jeu](src/resources/wp6177681-samurai-4k-wallpapers.jpg)
-
 ## 1. Analyse du projet
 
 ### 1.1 Structure du projet
@@ -143,7 +141,7 @@ Le développement de ce projet a été assisté par l'IA en utilisant les prompt
    implement a combat system based on the photo i gave you for the ui, in the first chapter there should be a ninja garden to defeat, when defeated the game continue otherwise the lose dialog shows hime that he was defeated by the ninja, also in the photo i gave you there is an inventory button, the user can use the items, and read the readme file make the game based on that
    ```
 
-![Capture d'écran d'interface](examples/Screenshot-From-2025-05-06-11-05-38.png)
+![Capture d'écran d'interface](./src/Examples/Screenshot-From-2025-05-06-11-05-38.png)
 
 ### 5.2 Approche de développement "Vibe Coding"
 
